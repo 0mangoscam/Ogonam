@@ -316,12 +316,12 @@ header {
     import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
     const $ = (id) => document.getElementById(id);
-    const state = {
+    window.state = window.state || {}; const state = window.state; Object.assign(state, {
       scene:null, camera:null, renderer:null, controls:null,
       root:null, bodyGroup:null, boardGroup:null,
       remoteSources:[], remoteTextures:[], materials:[], lights:{},
       spinTween:null, proceduralTextures:[], recording:false
-    };
+    });
 
     const paletteSets = {
       normal:['#e83b2f','#1357b7','#f6df55','#2c8b4b','#f5eee0','#191919','#f2a7b7'],
@@ -1046,5 +1046,302 @@ header {
       navigator.serviceWorker.register('./sw.js').catch(()=>{});
     }
   </script>
+
+<style id="ogonam-bottom-tools-v3">
+  .badge,
+  #createBtn,
+  #loadTexturesBtn,
+  #spinBtn,
+  #nameBtn,
+  #captureBtn,
+  #showBoard,
+  label[for="showBoard"] {
+    display: none !important;
+  }
+
+  html,
+  body {
+    width: 100% !important;
+    height: 100% !important;
+    overflow: hidden !important;
+    background: #05050a !important;
+  }
+
+  body {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  header {
+    position: relative !important;
+    flex: 0 0 auto !important;
+    padding: 14px 16px 8px !important;
+    border-bottom: 1px solid #ffffff18 !important;
+    z-index: 20 !important;
+  }
+
+  header h1 {
+    font-size: clamp(34px, 12vw, 54px) !important;
+    line-height: .82 !important;
+  }
+
+  main {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    height: calc(100dvh - 82px) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    padding: 8px !important;
+    gap: 8px !important;
+    overflow: hidden !important;
+  }
+
+  .viewportWrap {
+    order: 1 !important;
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    height: auto !important;
+    display: grid !important;
+    place-items: center !important;
+  }
+
+  #viewport {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    border-radius: 18px !important;
+    touch-action: none !important;
+  }
+
+  .hint {
+    display: none !important;
+  }
+
+  #ogonamToolDock {
+    order: 2 !important;
+    flex: 0 0 auto !important;
+    height: 238px !important;
+    width: 100% !important;
+    display: flex !important;
+    gap: 12px !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    padding: 8px 8px 14px !important;
+    scroll-snap-type: x mandatory !important;
+    -webkit-overflow-scrolling: touch !important;
+    touch-action: pan-x !important;
+  }
+
+  #ogonamToolDock::-webkit-scrollbar {
+    height: 0 !important;
+  }
+
+  #ogonamToolDock .panel {
+    flex: 0 0 86vw !important;
+    max-width: 420px !important;
+    min-width: 300px !important;
+    height: 210px !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    scroll-snap-align: start !important;
+    padding: 14px !important;
+    border-radius: 18px !important;
+  }
+
+  #ogonamToolDock h2 {
+    font-size: 18px !important;
+    margin-bottom: 8px !important;
+  }
+
+  #ogonamToolDock label {
+    margin: 8px 0 4px !important;
+  }
+
+  #ogonamToolDock input,
+  #ogonamToolDock select {
+    min-height: 42px !important;
+    font-size: 16px !important;
+  }
+
+  #ogonamToolDock .grid2 {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+  }
+
+  #ogonamToolDock button,
+  #dangerExplodeBtn {
+    min-height: 54px !important;
+    font-size: 13px !important;
+    border-radius: 14px !important;
+  }
+
+  #randomizeBtn,
+  #recordGifBtn,
+  #recordVideoBtn,
+  #dangerExplodeBtn {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  #dangerExplodeBtn {
+    width: 100% !important;
+    background: linear-gradient(180deg,#ff3535,#8d0000) !important;
+    color: white !important;
+    box-shadow: 4px 4px 0 #000 !important;
+    margin-top: 8px !important;
+  }
+
+  .source,
+  .thumbs,
+  .small,
+  .ok,
+  .status {
+    font-size: 11px !important;
+  }
+
+  .checks {
+    display: none !important;
+  }
+</style>
+
+<script id="ogonam-tools-v3">
+(function(){
+  function ready(fn){
+    if(document.readyState !== 'loading') fn();
+    else document.addEventListener('DOMContentLoaded', fn);
+  }
+
+  ready(function(){
+    const main = document.querySelector('main');
+    const viewportWrap = document.querySelector('.viewportWrap');
+    const panels = Array.from(document.querySelectorAll('main > .panel'));
+
+    if(main && viewportWrap && !document.getElementById('ogonamToolDock')){
+      const dock = document.createElement('div');
+      dock.id = 'ogonamToolDock';
+      panels.forEach(panel => dock.appendChild(panel));
+      main.appendChild(dock);
+    }
+
+    const allowed = new Set([
+      'randomizeBtn',
+      'recordGifBtn',
+      'recordVideoBtn',
+      'dangerExplodeBtn'
+    ]);
+
+    document.querySelectorAll('button').forEach(btn => {
+      if(!allowed.has(btn.id)){
+        btn.style.display = 'none';
+      }
+    });
+
+    const firstPanel = document.querySelector('#ogonamToolDock .panel');
+    if(firstPanel && !document.getElementById('dangerExplodeBtn')){
+      const danger = document.createElement('button');
+      danger.id = 'dangerExplodeBtn';
+      danger.textContent = 'NO PULSES ESTE BOTÓN';
+      firstPanel.appendChild(danger);
+
+      danger.addEventListener('click', function(){
+        const root = window.state && window.state.root ? window.state.root : null;
+        if(root){
+          const pieces = [];
+          root.traverse(obj => {
+            if(obj && obj.isMesh){
+              obj.userData.ogonamExploding = true;
+              obj.userData.vx = (Math.random() - .5) * .32;
+              obj.userData.vy = Math.random() * .32 + .08;
+              obj.userData.vz = (Math.random() - .5) * .32;
+              obj.userData.rx = (Math.random() - .5) * .18;
+              obj.userData.ry = (Math.random() - .5) * .18;
+              obj.userData.rz = (Math.random() - .5) * .18;
+              pieces.push(obj);
+            }
+          });
+
+          let ticks = 0;
+          const boom = setInterval(() => {
+            ticks++;
+            pieces.forEach(obj => {
+              obj.position.x += obj.userData.vx;
+              obj.position.y += obj.userData.vy;
+              obj.position.z += obj.userData.vz;
+              obj.rotation.x += obj.userData.rx;
+              obj.rotation.y += obj.userData.ry;
+              obj.rotation.z += obj.userData.rz;
+              obj.userData.vy -= .012;
+              if(obj.material){
+                if(Array.isArray(obj.material)){
+                  obj.material.forEach(m => { m.transparent = true; m.opacity = Math.max(0, (m.opacity ?? 1) - .018); });
+                } else {
+                  obj.material.transparent = true;
+                  obj.material.opacity = Math.max(0, (obj.material.opacity ?? 1) - .018);
+                }
+              }
+            });
+
+            if(ticks > 80){
+              clearInterval(boom);
+              if(typeof clearRoot === 'function'){
+                clearRoot();
+              } else if(root){
+                while(root.children.length) root.remove(root.children[0]);
+              }
+              if(typeof setStatus === 'function') setStatus('El personaje ha explotado. Muy responsable todo.');
+            }
+          }, 16);
+        } else {
+          if(typeof clearRoot === 'function') clearRoot();
+        }
+      });
+    }
+
+    const query = document.getElementById('query');
+
+    if(query){
+      query.placeholder = 'Busca texturas: canvas, clay, fabric, red, blue...';
+
+      query.addEventListener('keydown', function(e){
+        if(e.key === 'Enter'){
+          e.preventDefault();
+          if(typeof loadPublicTextures === 'function'){
+            loadPublicTextures();
+          }
+        }
+      });
+
+      let textureTimer = null;
+      query.addEventListener('change', function(){
+        clearTimeout(textureTimer);
+        textureTimer = setTimeout(() => {
+          if(typeof loadPublicTextures === 'function'){
+            loadPublicTextures();
+          }
+        }, 350);
+      });
+    }
+
+    const random = document.getElementById('randomizeBtn');
+    if(random){
+      const oldClick = random.onclick;
+      random.onclick = async function(e){
+        if(query && query.value && typeof loadPublicTextures === 'function'){
+          try { await loadPublicTextures(); } catch(err) {}
+        }
+        if(typeof randomize === 'function') randomize();
+        else if(typeof oldClick === 'function') oldClick.call(this, e);
+      };
+    }
+
+    const panelTitle = document.querySelector('#ogonamToolDock h2');
+    if(panelTitle) panelTitle.textContent = 'Herramientas';
+  });
+})();
+</script>
+
 </body>
 </html>
