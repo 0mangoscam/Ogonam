@@ -3,7 +3,7 @@ name: Build Ogonam APK
 on:
   workflow_dispatch:
   push:
-    branches: [ main, master ]
+    branches: [ main ]
 
 jobs:
   build:
@@ -18,20 +18,13 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '17'
+          java-version: 17
 
-      - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v6
-        with:
-          gradle-version: '8.7'
-
-      - name: Accept Android licenses and install SDK
-        run: |
-          yes | sdkmanager --licenses || true
-          sdkmanager "platforms;android-35" "build-tools;35.0.0"
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
 
       - name: Build APK
-        run: gradle assembleDebug --no-daemon
+        run: gradle assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
