@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ogonam Mobile</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="theme-color" content="#0c0c12" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <style>
+    :root{
+      --lime:#b6ff35;--cyan:#5ce8ff;--pink:#ff4fd8;--ink:#0c0c12;--panel:#171723;--line:#ffffff22;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;min-height:100vh;background:radial-gradient(circle at 10% 0%,#2d255a 0,#11111a 38%,#07070b 100%);color:#fff;font-family:Arial Black,Impact,system-ui,sans-serif}
+    body{overflow-x:hidden}
+    body::before{content:"";position:fixed;inset:0;pointer-events:none;background:linear-gradient(#ffffff08 50%,#00000010 50%);background-size:100% 4px;mix-blend-mode:overlay;opacity:.45;z-index:9}
+    header{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:18px 22px;border-bottom:2px solid var(--line);background:#07070bcc;backdrop-filter:blur(10px);position:sticky;top:0;z-index:10}
+    h1{font-size:clamp(22px,4vw,42px);margin:0;letter-spacing:-1px;text-transform:uppercase;text-shadow:4px 4px 0 #000,-2px 0 var(--pink)}
+    .badge{border:2px solid var(--lime);color:var(--lime);padding:8px 10px;transform:rotate(2deg);box-shadow:4px 4px 0 #000;font-size:12px;text-align:center}
+    main{display:grid;grid-template-columns:350px 1fr 330px;gap:14px;padding:14px;max-width:1500px;margin:auto}
+    .panel{background:linear-gradient(180deg,#1d1d2c,#11111a);border:2px solid #ffffff20;box-shadow:8px 8px 0 #00000080;border-radius:14px;padding:16px;position:relative;overflow:hidden}
+    .panel::after{content:"";position:absolute;inset:auto -40px -70px auto;width:160px;height:160px;background:var(--pink);filter:blur(70px);opacity:.14;pointer-events:none}
+    h2{margin:0 0 12px;text-transform:uppercase;color:var(--cyan);font-size:18px;text-shadow:2px 2px #000}
+    label{display:block;margin:12px 0 6px;font-size:12px;text-transform:uppercase;color:#e9e9f5cc;letter-spacing:.5px}
+    input[type="text"], input[type="range"], select{width:100%}
+    input[type="text"], select{background:#08080d;color:#fff;border:2px solid #ffffff25;border-radius:8px;padding:10px;font-weight:bold}
+    input[type="range"]{accent-color:var(--lime)}
+    button{background:linear-gradient(180deg,var(--lime),#70b71a);border:0;border-radius:10px;padding:12px 14px;font-family:Arial Black,Impact,sans-serif;text-transform:uppercase;box-shadow:4px 4px 0 #000;color:#111;cursor:pointer;margin:6px 4px 6px 0;transition:.12s transform,.12s filter}
+    button:hover{transform:translate(-1px,-1px);filter:saturate(1.2)}
+    button.alt{background:linear-gradient(180deg,var(--pink),#a22088);color:#fff}
+    button.blue{background:linear-gradient(180deg,var(--cyan),#208fc7)}
+    button.ghost{background:linear-gradient(180deg,#e8e8e8,#969696);color:#111}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+    .viewportWrap{display:grid;place-items:center;min-height:720px;background:linear-gradient(135deg,#22223a,#0d0d14);border-radius:16px;border:2px solid #ffffff20;position:relative;overflow:hidden}
+    .viewportWrap::before{content:"OGONAM";position:absolute;font-size:14vw;color:#ffffff07;transform:rotate(-12deg);white-space:nowrap;pointer-events:none}
+    #viewport{width:min(94vw,860px);height:680px;border-radius:18px;border:2px solid #ffffff18;background:radial-gradient(circle at 50% 20%,#293155 0,#11111a 50%,#09090d 100%);position:relative;overflow:hidden;box-shadow:inset 0 0 60px #000}
+    #viewport canvas{display:block;width:100%;height:100%}
+    .overlayTag{position:absolute;left:18px;top:18px;background:#000b;border:2px solid var(--lime);padding:12px 16px;box-shadow:4px 4px #000;z-index:2;text-transform:uppercase;pointer-events:none}
+    .hint{position:absolute;right:18px;bottom:18px;background:#0009;border:2px solid #ffffff1d;padding:10px 12px;font:12px system-ui,sans-serif;color:#fff;z-index:2;max-width:240px;line-height:1.4;pointer-events:none}
+    .status{margin-top:10px;padding:10px 12px;background:#090910;border:2px solid #ffffff14;border-radius:10px;font:13px system-ui,sans-serif;color:#d8f9ff;line-height:1.4}
+    .small{font:12px system-ui,sans-serif;color:#ffffffa8;line-height:1.4}
+    .thumbs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+    .thumb{height:72px;border:2px solid #ffffff22;border-radius:8px;background-size:cover;background-position:center}
+    .source{font:11px system-ui,sans-serif;color:#ffffff80;word-break:break-word;max-height:210px;overflow:auto;border-top:1px solid #ffffff22;margin-top:10px;padding-top:10px;line-height:1.4}
+    .checks{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+    .check{display:flex;align-items:center;gap:8px;background:#090910;border:2px solid #ffffff14;border-radius:10px;padding:10px 12px;font:13px system-ui,sans-serif}
+    .check input{accent-color:var(--lime)}
+    .stats{display:grid;gap:8px}.stat{display:grid;grid-template-columns:82px 1fr;align-items:center;gap:8px}.bar{height:16px;background:#000;border:2px solid #ffffff22}.fill{height:100%;background:linear-gradient(90deg,var(--pink),var(--lime))}
+    .ok{margin-top:10px;font:12px system-ui,sans-serif;color:#dfffe5;line-height:1.4;background:#102218;border:1px solid #345c42;border-radius:10px;padding:10px}
+    @media(max-width:1180px){main{grid-template-columns:1fr}.viewportWrap{min-height:560px}#viewport{height:560px}}
+    @media(max-width:760px){
+      body{background:#09090d;overflow-x:hidden}
+      header{padding:10px 12px;gap:8px}
+      h1{font-size:28px;letter-spacing:.5px}
+      .badge{font-size:9px;padding:6px 7px;box-shadow:3px 3px 0 #000}
+      main{display:flex;flex-direction:column;padding:8px;gap:10px}
+      .viewportWrap{order:1;min-height:calc(100svh - 86px);border-radius:12px;position:sticky;top:62px;z-index:1}
+      #viewport{width:100%;height:calc(100svh - 96px);border-radius:12px}
+      .panel{border-radius:12px;padding:12px;box-shadow:5px 5px 0 #00000090}
+      main > .panel:first-child{order:2}
+      aside.panel{order:3}
+      .grid2{grid-template-columns:1fr 1fr;gap:6px}
+      .checks{grid-template-columns:1fr 1fr;gap:6px}
+      button{font-size:12px;padding:13px 8px;margin:4px 0;border-radius:11px;box-shadow:3px 3px 0 #000}
+      input[type="text"],select{font-size:16px;padding:12px}
+      label{margin:10px 0 5px}
+      .overlayTag{left:10px;top:10px;font-size:12px;padding:9px 11px}
+      .hint{right:10px;bottom:10px;font-size:11px;max-width:190px;padding:8px 9px}
+      .thumb{height:64px}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Ogonam</h1>
+    <div class="badge">3D ABSTRACTO<br>GIRO 360º<br>TEXTURAS PÚBLICAS</div>
+  </header>
+
+  <main>
+    <section class="panel">
+      <h2>Crear personaje</h2>
+      <label>Nombre</label>
+      <input id="charName" value="BARRIO GHOST" maxlength="20" />
+
+      <label>Búsqueda de texturas</label>
+      <input id="query" value="portrait fabric graffiti stone sculpture street" />
+
+      <div class="grid2">
+        <button id="createBtn">Crear personaje</button>
+        <button id="randomizeBtn" class="alt">Randomizar</button>
+      </div>
+      <div class="grid2">
+        <button id="loadTexturesBtn" class="blue">Cargar texturas públicas</button>
+        <button id="spinBtn">Giro 360</button>
+      </div>
+      <div class="grid2">
+        <button id="recordGifBtn" class="ghost">Guardar GIF 360</button>
+        <button id="recordVideoBtn" class="ghost">Guardar video 360</button>
+      </div>
+
+      <label>Abstracción</label>
+      <input id="abstractness" type="range" min="0" max="100" value="65" />
+      <label>Altura</label>
+      <input id="heightScale" type="range" min="80" max="150" value="110" />
+      <label>Anchura</label>
+      <input id="widthScale" type="range" min="70" max="150" value="98" />
+      <label>Caos de pose</label>
+      <input id="poseChaos" type="range" min="0" max="100" value="55" />
+      <label>Chunkiness PS2</label>
+      <input id="chunkiness" type="range" min="10" max="100" value="72" />
+
+      <label>Estética</label>
+      <select id="vibe">
+        <option value="normal">Mall punk PS2</option>
+        <option value="night">Parking nocturno</option>
+        <option value="sick">Neón radioactivo</option>
+        <option value="mono">B/N documental</option>
+        <option value="sunset">Atardecer sucio</option>
+      </select>
+
+      <div class="checks">
+        <label class="check"><input id="autoSpin" type="checkbox" checked /> Auto giro</label>
+        <label class="check"><input id="showBoard" type="checkbox" checked /> Mostrar skate</label>
+      </div>
+
+      <h2 style="margin-top:18px">Fuentes públicas</h2>
+      <div class="checks">
+        <label class="check"><input id="srcWikimedia" type="checkbox" checked /> Wikimedia</label>
+        <label class="check"><input id="srcOpenverse" type="checkbox" checked /> Openverse</label>
+        <label class="check"><input id="srcMet" type="checkbox" checked /> The Met</label>
+        <label class="check"><input id="srcArtIC" type="checkbox" checked /> Art Institute</label>
+      </div>
+
+      <div class="status" id="status">Inicializando escena 3D...</div>
+      <p class="small">Ahora todas las piezas del modelo reciben materiales con textura, y las texturas usan wrapping/repeat para cubrir todas las caras de cada bloque, cilindro o esfera sin dejar zonas muertas.</p>
+      <div class="ok">GIF y vídeo ya van por botón. El vídeo se guarda en WebM. El GIF tarda un poco más porque tiene que cocinarse frame a frame, como un sushi muy terco.</div>
+    </section>
+
+    <section class="viewportWrap">
+      <div id="viewport">
+        <div class="overlayTag" id="plate">BARRIO GHOST</div>
+        <div class="hint">Arrastra para rotar · rueda para zoom · “Giro 360” para una vuelta · guarda GIF o vídeo del giro</div>
+      </div>
+    </section>
+
+    <aside class="panel">
+      <h2>Stats</h2>
+      <div class="stats" id="stats"></div>
+      <button id="nameBtn">Nombre PS2</button>
+      <button id="captureBtn" class="blue">Capturar PNG</button>
+
+      <h2 style="margin-top:18px">Texturas cargadas</h2>
+      <div class="thumbs" id="thumbs"></div>
+      <div class="source" id="source">Todavía no hay texturas remotas cargadas. De momento se usan texturas procedurales internas para que nunca se quede en blanco.</div>
+    </aside>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/gif.js.optimized/dist/gif.js"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+    const $ = (id) => document.getElementById(id);
+    const state = {
+      scene:null, camera:null, renderer:null, controls:null,
+      root:null, bodyGroup:null, boardGroup:null,
+      remoteSources:[], remoteTextures:[], materials:[], lights:{},
+      spinTween:null, proceduralTextures:[], recording:false
+    };
+
+    const paletteSets = {
+      normal:['#b6ff35','#ff4fd8','#5ce8ff','#f8f1d4','#1a1a24','#ffb238'],
+      night:['#1a1f3e','#3446ff','#66d4ff','#8ee8ff','#080816','#a38fff'],
+      sick:['#98ff00','#00ffe1','#ff00dd','#fffb00','#0d0d14','#ff6a00'],
+      mono:['#f5f5f5','#d7d7d7','#8f8f8f','#3a3a3a','#111111','#cfcfcf'],
+      sunset:['#ff5e57','#ff9966','#ffd166','#7bdff2','#6a4c93','#1b1c2f']
+    };
+
+    const textureLoader = new THREE.TextureLoader();
+    textureLoader.setCrossOrigin('anonymous');
+
+    function setStatus(text){ $('status').textContent = text; }
+    function rand(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+    function rnd(min,max){ return min + Math.random() * (max - min); }
+    function cap(text,n=120){ return text.length > n ? text.slice(0,n-1)+'…' : text; }
+    function updatePlate(){ $('plate').textContent = ($('charName').value || 'NO NAME').toUpperCase(); }
+    function delay(ms){ return new Promise(r => setTimeout(r, ms)); }
+
+    function statLine(name,val){ return `<div class="stat"><span>${name}</span><div class="bar"><div class="fill" style="width:${val}%"></div></div></div>`; }
+    function refreshStats(){
+      const a = Number($('abstractness').value);
+      const p = Number($('poseChaos').value);
+      const c = Number($('chunkiness').value);
+      const vals = [
+        ['AIR', 30 + Math.floor(Math.random()*45)],
+        ['STYLE', 40 + Math.floor(a*0.55)],
+        ['WEIRD', 15 + Math.floor(a*0.8)],
+        ['GRIND', 30 + Math.floor(c*0.55)],
+        ['FLOW', 25 + Math.floor((100-p)*0.45)],
+        ['CHAOS', 20 + Math.floor(p*0.75)]
+      ];
+      $('stats').innerHTML = vals.map(([n,v]) => statLine(n, Math.min(v,100))).join('');
+    }
+
+    function prepTexture(tx){
+      tx.colorSpace = THREE.SRGBColorSpace;
+      tx.wrapS = tx.wrapT = THREE.RepeatWrapping;
+      tx.repeat.set(rnd(0.85,2.25), rnd(0.85,2.25));
+      tx.needsUpdate = true;
+      return tx;
+    }
+
+    function makeProceduralTexture(kind, c1, c2){
+      const canvas = document.createElement('canvas');
+      canvas.width = 256; canvas.height = 256;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = c1; ctx.fillRect(0,0,256,256);
+      if(kind === 'checker'){
+        for(let y=0;y<8;y++) for(let x=0;x<8;x++){
+          ctx.fillStyle = (x+y)%2===0 ? c2 : c1;
+          ctx.fillRect(x*32,y*32,32,32);
+        }
+      }else if(kind === 'noise'){
+        for(let i=0;i<1600;i++){
+          ctx.fillStyle = Math.random()>0.5 ? c1 : c2;
+          ctx.fillRect(Math.random()*256, Math.random()*256, Math.random()*20, Math.random()*20);
+        }
+      }else if(kind === 'stripes'){
+        for(let i=0;i<20;i++){
+          ctx.fillStyle = i%2===0 ? c2 : c1;
+          ctx.fillRect(i*14,0,8,256);
+        }
+      }else if(kind === 'spray'){
+        for(let i=0;i<2400;i++){
+          ctx.fillStyle = Math.random()>0.5 ? c1 : c2;
+          ctx.globalAlpha = Math.random()*0.6;
+          ctx.beginPath();
+          ctx.arc(Math.random()*256, Math.random()*256, Math.random()*6, 0, Math.PI*2);
+          ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+      }
+      const tx = new THREE.CanvasTexture(canvas);
+      return prepTexture(tx);
+    }
+
+    function buildProceduralPool(){
+      const vibe = $('vibe').value;
+      const colors = paletteSets[vibe];
+      state.proceduralTextures = [
+        makeProceduralTexture('checker', rand(colors), rand(colors)),
+        makeProceduralTexture('noise', rand(colors), rand(colors)),
+        makeProceduralTexture('stripes', rand(colors), rand(colors)),
+        makeProceduralTexture('spray', rand(colors), rand(colors)),
+        makeProceduralTexture('noise', '#1a1a24', rand(colors)),
+        makeProceduralTexture('checker', '#111111', '#d7d7d7')
+      ];
+    }
+
+    function allTextures(){
+      return state.remoteTextures.length ? [...state.remoteTextures, ...state.proceduralTextures] : state.proceduralTextures;
+    }
+
+    function createRenderer(){
+      const vp = $('viewport');
+      state.renderer = new THREE.WebGLRenderer({ antialias:true, alpha:true, preserveDrawingBuffer:true });
+      state.renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+      state.renderer.setSize(vp.clientWidth, vp.clientHeight);
+      state.renderer.outputColorSpace = THREE.SRGBColorSpace;
+      state.renderer.shadowMap.enabled = true;
+      vp.appendChild(state.renderer.domElement);
+
+      state.scene = new THREE.Scene();
+      state.scene.fog = new THREE.Fog(0x09090d, 12, 34);
+      state.camera = new THREE.PerspectiveCamera(42, vp.clientWidth / vp.clientHeight, 0.1, 100);
+      state.camera.position.set(0, 2.8, 8.8);
+
+      state.controls = new OrbitControls(state.camera, state.renderer.domElement);
+      state.controls.enableDamping = true;
+      state.controls.dampingFactor = 0.08;
+      state.controls.target.set(0, 2.1, 0);
+      state.controls.minDistance = 5;
+      state.controls.maxDistance = 15;
+      state.controls.maxPolarAngle = Math.PI * 0.48;
+
+      state.lights.hemi = new THREE.HemisphereLight(0x8ec5ff, 0x1a1010, 1.2);
+      state.scene.add(state.lights.hemi);
+      state.lights.key = new THREE.DirectionalLight(0xffffff, 1.7);
+      state.lights.key.position.set(5,9,7);
+      state.lights.key.castShadow = true;
+      state.lights.key.shadow.mapSize.width = 1024;
+      state.lights.key.shadow.mapSize.height = 1024;
+      state.scene.add(state.lights.key);
+      state.lights.rim = new THREE.PointLight(0xff4fd8, 18, 24, 2);
+      state.lights.rim.position.set(-4,4,-5);
+      state.scene.add(state.lights.rim);
+      state.lights.fill = new THREE.PointLight(0x5ce8ff, 12, 18, 2);
+      state.lights.fill.position.set(4,2,5);
+      state.scene.add(state.lights.fill);
+
+      const floor = new THREE.Mesh(
+        new THREE.CircleGeometry(7.8, 48),
+        new THREE.MeshStandardMaterial({ color:0x11111a, metalness:0.35, roughness:0.92 })
+      );
+      floor.rotation.x = -Math.PI/2; floor.receiveShadow = true; state.scene.add(floor);
+
+      const ring = new THREE.Mesh(
+        new THREE.TorusGeometry(4.9, 0.09, 10, 64),
+        new THREE.MeshBasicMaterial({ color:0xb6ff35, transparent:true, opacity:0.75 })
+      );
+      ring.rotation.x = Math.PI/2; ring.position.y = 0.03; state.scene.add(ring);
+
+      const grid = new THREE.GridHelper(12, 16, 0x5ce8ff, 0x2e2e44);
+      grid.position.y = 0.02; grid.material.transparent = true; grid.material.opacity = 0.23; state.scene.add(grid);
+
+      state.root = new THREE.Group();
+      state.scene.add(state.root);
+
+      window.addEventListener('resize', onResize);
+    }
+
+    function onResize(){
+      const vp = $('viewport');
+      if(!state.renderer) return;
+      state.renderer.setSize(vp.clientWidth, vp.clientHeight);
+      state.camera.aspect = vp.clientWidth / vp.clientHeight;
+      state.camera.updateProjectionMatrix();
+    }
+
+    function clearMaterials(){
+      state.materials.forEach(m => {
+        if(m.dispose) m.dispose();
+      });
+      state.materials = [];
+    }
+
+    function clearRoot(){
+      while(state.root.children.length){
+        const obj = state.root.children.pop();
+        obj.traverse(node => {
+          if(node.geometry) node.geometry.dispose();
+          if(node.material){
+            if(Array.isArray(node.material)) node.material.forEach(m=>m.dispose && m.dispose());
+            else node.material.dispose && node.material.dispose();
+          }
+        });
+      }
+      clearMaterials();
+    }
+
+    function makeFaceMaterial(texture, color){
+      const mat = new THREE.MeshStandardMaterial({
+        color: color || '#ffffff',
+        map: texture,
+        roughness: rnd(0.45,0.95),
+        metalness: rnd(0.05,0.35)
+      });
+      state.materials.push(mat);
+      return mat;
+    }
+
+    function makeMappedMaterialSet(baseIndex){
+      const textures = allTextures();
+      const colors = paletteSets[$('vibe').value];
+      const set = [];
+      for(let i=0;i<6;i++){
+        const tx = textures[(baseIndex + i) % textures.length] || rand(textures);
+        set.push(makeFaceMaterial(tx, rand(colors)));
+      }
+      return set;
+    }
+
+    function makeMaterial(idx){
+      const colors = paletteSets[$('vibe').value];
+      const txs = allTextures();
+      const texture = txs[idx % txs.length] || rand(txs);
+      return makeFaceMaterial(texture, rand(colors));
+    }
+
+    function randomGeom(type='box', scale=1, abstractness=0.5, chunk=0.5){
+      const c = 0.55 + chunk * 0.9;
+      const blob = abstractness;
+      const pick = type === 'limb'
+        ? rand(['box','cylinder','capsule'])
+        : type === 'head'
+          ? rand(['box','sphere','octa'])
+          : rand(['box','cylinder','sphere','octa','cone']);
+
+      if(pick === 'sphere') return { geometry:new THREE.SphereGeometry(scale * rnd(0.32, 0.75) * c, Math.max(6, Math.floor(10 + blob*10)), Math.max(6, Math.floor(8 + blob*8))), faceSet:false };
+      if(pick === 'octa') return { geometry:new THREE.OctahedronGeometry(scale * rnd(0.38,0.85) * c, blob > 0.75 ? 1 : 0), faceSet:false };
+      if(pick === 'cone') return { geometry:new THREE.ConeGeometry(scale * rnd(0.28,0.68) * c, scale * rnd(0.7,1.6) * c, Math.max(5, Math.floor(8 + blob*6))), faceSet:false };
+      if(pick === 'capsule' && THREE.CapsuleGeometry) return { geometry:new THREE.CapsuleGeometry(scale * rnd(0.12,0.28) * c, scale * rnd(0.7,1.5) * c, 6, 10), faceSet:false };
+      if(pick === 'cylinder') return { geometry:new THREE.CylinderGeometry(scale * rnd(0.18,0.45) * c, scale * rnd(0.18,0.5) * c, scale * rnd(0.7,1.7) * c, Math.max(5, Math.floor(8 + blob*8))), faceSet:false };
+      return { geometry:new THREE.BoxGeometry(scale * rnd(0.42,1.15) * c, scale * rnd(0.42,1.45) * c, scale * rnd(0.35,1.1) * c), faceSet:true };
+    }
+
+    function addMesh(parent, geomInfo, material, pos, rot=[0,0,0], shadow=true){
+      const mesh = new THREE.Mesh(geomInfo.geometry || geomInfo, material);
+      mesh.position.set(pos[0],pos[1],pos[2]);
+      mesh.rotation.set(rot[0],rot[1],rot[2]);
+      mesh.castShadow = shadow; mesh.receiveShadow = shadow; parent.add(mesh); return mesh;
+    }
+
+    function materialForGeometry(baseIndex, geomInfo){
+      return geomInfo.faceSet ? makeMappedMaterialSet(baseIndex) : makeMaterial(baseIndex);
+    }
+
+    function applyVibe(){
+      const vibe = $('vibe').value;
+      const presets = {
+        normal:{ bg:0x101018, fog:0x09090d, rim:0xff4fd8, fill:0x5ce8ff, hemi:0x8ec5ff },
+        night:{ bg:0x090b16, fog:0x090b14, rim:0x6574ff, fill:0x89d7ff, hemi:0x6180d6 },
+        sick:{ bg:0x0a0f08, fog:0x0a0c08, rim:0xff00c3, fill:0x00ffd5, hemi:0x85ff72 },
+        mono:{ bg:0x101010, fog:0x090909, rim:0xffffff, fill:0x9a9a9a, hemi:0xd5d5d5 },
+        sunset:{ bg:0x1a1115, fog:0x120b10, rim:0xff8f66, fill:0xffd166, hemi:0xffc4a3 }
+      };
+      const p = presets[vibe];
+      state.scene.background = new THREE.Color(p.bg);
+      state.scene.fog.color = new THREE.Color(p.fog);
+      state.lights.rim.color = new THREE.Color(p.rim);
+      state.lights.fill.color = new THREE.Color(p.fill);
+      state.lights.hemi.color = new THREE.Color(p.hemi);
+    }
+
+    function buildCharacter(){
+      updatePlate();
+      buildProceduralPool();
+      clearRoot();
+      const abstractness = Number($('abstractness').value) / 100;
+      const heightScale = Number($('heightScale').value) / 100;
+      const widthScale = Number($('widthScale').value) / 100;
+      const poseChaos = Number($('poseChaos').value) / 100;
+      const chunkiness = Number($('chunkiness').value) / 100;
+      const showBoard = $('showBoard').checked;
+
+      state.bodyGroup = new THREE.Group();
+      state.boardGroup = new THREE.Group();
+      state.root.add(state.bodyGroup);
+      state.root.add(state.boardGroup);
+      state.root.position.y = 0.15;
+      state.root.rotation.y = 0.3;
+
+      const colors = paletteSets[$('vibe').value];
+      const accent = makeFaceMaterial(allTextures()[0] || state.proceduralTextures[0], rand(colors));
+
+      let idx = 0;
+      const torsoG = randomGeom('torso', 1.4 * widthScale, abstractness, chunkiness);
+      const torso = addMesh(state.bodyGroup, torsoG, materialForGeometry(idx++, torsoG), [0, 2.8 * heightScale, 0], [rnd(-0.2,0.2)*poseChaos, rnd(-0.4,0.4)*poseChaos, rnd(-0.2,0.2)*poseChaos]);
+      torso.scale.set(1.1*widthScale, 1.4*heightScale, 0.9 + abstractness*0.5);
+
+      const headG = randomGeom('head', 1.1, abstractness, chunkiness);
+      const head = addMesh(state.bodyGroup, headG, materialForGeometry(idx++, headG), [0, 4.85 * heightScale, 0.05], [rnd(-0.2,0.22), rnd(-0.45,0.45), rnd(-0.12,0.18)]);
+      head.scale.set(0.95 + chunkiness*0.75, 1 + abstractness*0.4, 0.95 + abstractness*0.35);
+      addMesh(state.bodyGroup, {geometry:new THREE.BoxGeometry(0.22,0.12,0.08), faceSet:true}, makeMappedMaterialSet(idx++), [-0.27, 4.95 * heightScale, 0.55], [0,0,rnd(-0.4,0.4)]);
+      addMesh(state.bodyGroup, {geometry:new THREE.BoxGeometry(0.22,0.12,0.08), faceSet:true}, makeMappedMaterialSet(idx++), [0.27, 4.95 * heightScale, 0.55], [0,0,rnd(-0.4,0.4)]);
+      addMesh(state.bodyGroup, {geometry:new THREE.BoxGeometry(0.4,0.08,0.08), faceSet:true}, makeMappedMaterialSet(idx++), [0, 4.58 * heightScale, 0.55], [0,0,rnd(-0.25,0.25)]);
+
+      for(let i=0;i<2 + Math.floor(abstractness * 6);i++){
+        const g = randomGeom('head', 0.35, abstractness, chunkiness);
+        addMesh(state.bodyGroup, g, materialForGeometry(idx++, g), [rnd(-0.7,0.7), 5.25*heightScale + rnd(-0.1,0.5), rnd(-0.3,0.3)], [rnd(0,Math.PI),rnd(0,Math.PI),rnd(0,Math.PI)]);
+      }
+
+      const limbX = 1.45 * widthScale;
+      const armY = 2.95 * heightScale;
+      const legY = 1.1 * heightScale;
+      const armRot = poseChaos * 1.2;
+      const legRot = poseChaos * 0.9;
+
+      const armLG = randomGeom('limb', 1.15, abstractness, chunkiness);
+      const armRG = randomGeom('limb', 1.15, abstractness, chunkiness);
+      const armL = addMesh(state.bodyGroup, armLG, materialForGeometry(idx++, armLG), [-limbX, armY, 0], [rnd(-1.0,-0.2)*armRot, rnd(-0.25,0.25), rnd(-0.2,1.15)*armRot]);
+      const armR = addMesh(state.bodyGroup, armRG, materialForGeometry(idx++, armRG), [limbX, armY, 0], [rnd(-1.0,-0.2)*armRot, rnd(-0.25,0.25), rnd(0.2,-1.15)*-armRot]);
+      armL.scale.set(0.9, 1.3 + chunkiness*0.6, 0.9); armR.scale.set(0.9, 1.3 + chunkiness*0.6, 0.9);
+
+      const foreLG = randomGeom('limb', 0.9, abstractness, chunkiness);
+      const foreRG = randomGeom('limb', 0.9, abstractness, chunkiness);
+      addMesh(state.bodyGroup, foreLG, materialForGeometry(idx++, foreLG), [-2.05*widthScale, 1.95*heightScale, 0.08], [rnd(-1.0,-0.2)*armRot, rnd(-0.3,0.3), rnd(-0.6,1.3)*armRot]);
+      addMesh(state.bodyGroup, foreRG, materialForGeometry(idx++, foreRG), [2.05*widthScale, 1.95*heightScale, 0.08], [rnd(-1.0,-0.2)*armRot, rnd(-0.3,0.3), rnd(0.6,-1.3)*-armRot]);
+
+      const legLG = randomGeom('limb', 1.35, abstractness, chunkiness);
+      const legRG = randomGeom('limb', 1.35, abstractness, chunkiness);
+      const legL = addMesh(state.bodyGroup, legLG, materialForGeometry(idx++, legLG), [-0.65*widthScale, legY, 0], [rnd(-0.6,0.9)*legRot, rnd(-0.2,0.2), rnd(-0.3,0.3)]);
+      const legR = addMesh(state.bodyGroup, legRG, materialForGeometry(idx++, legRG), [0.65*widthScale, legY, 0], [rnd(-0.6,0.9)*legRot, rnd(-0.2,0.2), rnd(-0.3,0.3)]);
+      legL.scale.set(1, 1.6 + chunkiness*0.6, 1); legR.scale.set(1, 1.6 + chunkiness*0.6, 1);
+      addMesh(state.bodyGroup, {geometry:new THREE.BoxGeometry(0.95 + chunkiness*0.45, 0.28 + chunkiness*0.2, 1.7), faceSet:true}, makeMappedMaterialSet(idx++), [-0.8*widthScale, 0.32, 0.2], [0, rnd(-0.4,0.3), rnd(-0.1,0.1)]);
+      addMesh(state.bodyGroup, {geometry:new THREE.BoxGeometry(0.95 + chunkiness*0.45, 0.28 + chunkiness*0.2, 1.7), faceSet:true}, makeMappedMaterialSet(idx++), [0.8*widthScale, 0.32, -0.15], [0, rnd(-0.4,0.3), rnd(-0.1,0.1)]);
+
+      for(let i=0;i<Math.floor(4 + abstractness * 12);i++){
+        const g = randomGeom('torso', rnd(0.18,0.48), abstractness, chunkiness);
+        const piece = addMesh(state.bodyGroup, g, materialForGeometry(idx++, g), [rnd(-2.4,2.4), rnd(1.2,5.5)*heightScale, rnd(-1.6,1.6)], [rnd(0,Math.PI),rnd(0,Math.PI),rnd(0,Math.PI)]);
+        piece.userData.orbitSpeed = rnd(0.2,0.9);
+        piece.userData.phase = rnd(0,Math.PI*2);
+        piece.userData.radius = rnd(0.4,1.2);
+      }
+
+      if(showBoard){
+        const deckGeom = {geometry:new THREE.BoxGeometry(3.9, 0.16 + chunkiness*0.18, 0.92 + chunkiness*0.12), faceSet:true};
+        const deck = new THREE.Mesh(deckGeom.geometry, makeMappedMaterialSet(idx++));
+        deck.castShadow = true; deck.receiveShadow = true; deck.position.set(0, 0.18, 0); deck.rotation.set(0.02, rnd(-0.7,0.5), rnd(-0.08,0.08)); state.boardGroup.add(deck);
+        const nose = new THREE.Mesh(new THREE.CylinderGeometry(0.46,0.46,0.14,20), accent); nose.rotation.z = Math.PI/2; nose.position.set(2.02,0.18,0); state.boardGroup.add(nose);
+        const tail = new THREE.Mesh(new THREE.CylinderGeometry(0.46,0.46,0.14,20), accent); tail.rotation.z = Math.PI/2; tail.position.set(-2.02,0.18,0); state.boardGroup.add(tail);
+        const truckMat = new THREE.MeshStandardMaterial({color:0xd9d9d9, metalness:0.8, roughness:0.28}); state.materials.push(truckMat);
+        const wheelTex = allTextures()[idx % allTextures().length] || state.proceduralTextures[0];
+        const wheelMat = new THREE.MeshStandardMaterial({color:rand(colors), map:wheelTex, roughness:0.56, metalness:0.15}); state.materials.push(wheelMat);
+        [[-1.35,0.12,0.52],[-1.35,0.12,-0.52],[1.35,0.12,0.52],[1.35,0.12,-0.52]].forEach((p, ix)=>{
+          const wheel = new THREE.Mesh(new THREE.CylinderGeometry(0.22,0.22,0.18,18), wheelMat); wheel.rotation.z = Math.PI/2; wheel.position.set(...p); wheel.castShadow = true; state.boardGroup.add(wheel);
+          const truck = new THREE.Mesh(new THREE.BoxGeometry(0.16,0.12,0.55), truckMat); truck.position.set(ix<2?-1.35:1.35,0.22,0); truck.castShadow = true; state.boardGroup.add(truck);
+        });
+        state.boardGroup.position.set(0,0,0.1); state.boardGroup.rotation.y = rnd(-0.8,0.8) * poseChaos;
+      }
+      applyVibe();
+      refreshStats();
+      setStatus(state.remoteTextures.length ? `Personaje creado con ${state.remoteTextures.length} texturas remotas y mapeo en todas las caras.` : 'Personaje creado con texturas procedurales y mapeo completo en todas las caras.');
+    }
+
+    function randomize(){
+      $('abstractness').value = Math.floor(rnd(25,100));
+      $('heightScale').value = Math.floor(rnd(85,145));
+      $('widthScale').value = Math.floor(rnd(75,145));
+      $('poseChaos').value = Math.floor(rnd(15,100));
+      $('chunkiness').value = Math.floor(rnd(15,100));
+      $('vibe').value = rand(['normal','night','sick','mono','sunset']);
+      if(Math.random()>0.35) generateName();
+      buildCharacter();
+    }
+
+    function generateName(){
+      const a=['Barrio','Neon','Concrete','Turbo','Ghost','Pixel','Mall','Moon','Sants','Chrome','Dust'];
+      const b=['Vandal','Skater','Wizard','Kid','Ninja','Cryptid','Rookie','Goblin','Captain','Machine','Mutant','Phantom'];
+      $('charName').value = rand(a)+' '+rand(b);
+      updatePlate();
+    }
+
+    async function loadTextureObjectsFromUrls(sources){
+      const textures = [];
+      for(const src of sources){
+        try{
+          const tx = await textureLoader.loadAsync(src.url);
+          textures.push(prepTexture(tx));
+        }catch(e){
+          // skip broken/CORS-blocked
+        }
+      }
+      return textures;
+    }
+
+    async function fetchWikimedia(query){
+      const q = encodeURIComponent(query + ' filetype:bitmap');
+      const url = `https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch=${q}&gsrnamespace=6&gsrlimit=12&prop=imageinfo&iiprop=url|extmetadata&iiurlwidth=1024&format=json&origin=*`;
+      const data = await fetch(url).then(r=>r.json());
+      const pages = Object.values(data.query?.pages || {});
+      return pages.map(p => {
+        const meta = p.imageinfo?.[0]?.extmetadata || {};
+        const license = `${meta.LicenseShortName?.value || ''} ${meta.UsageTerms?.value || ''} ${meta.License?.value || ''}`;
+        return { title:p.title?.replace('File:','') || 'Wikimedia image', url:p.imageinfo?.[0]?.thumburl || p.imageinfo?.[0]?.url, license, source:'Wikimedia Commons' };
+      }).filter(x => x.url && /Public domain|CC0|CC-0|Zero|PDM/i.test(x.license)).slice(0,4);
+    }
+
+    async function fetchOpenverse(query){
+      const url = `https://api.openverse.org/v1/images/?q=${encodeURIComponent(query)}&license=cc0,pdm&license_type=all&page_size=8`;
+      const data = await fetch(url).then(r=>r.json());
+      return (data.results || []).map(item => ({ title:item.title || 'Openverse image', url:item.thumbnail || item.url, license:item.license || 'CC0/PDM', source:'Openverse' })).filter(x => x.url).slice(0,4);
+    }
+
+    async function fetchMet(query){
+      const searchUrl = `https://collectionapi.metmuseum.org/public/collection/v1/search?hasImages=true&q=${encodeURIComponent(query)}`;
+      const search = await fetch(searchUrl).then(r=>r.json());
+      const ids = (search.objectIDs || []).slice(0,4);
+      const results = [];
+      for(const id of ids){
+        try{
+          const obj = await fetch(`https://collectionapi.metmuseum.org/public/collection/v1/objects/${id}`).then(r=>r.json());
+          if(obj.isPublicDomain && obj.primaryImageSmall){ results.push({ title:obj.title || 'The Met image', url:obj.primaryImageSmall, license:'Public Domain', source:'The Met' }); }
+        }catch(e){}
+      }
+      return results;
+    }
+
+    async function fetchArtIC(query){
+      const url = `https://api.artic.edu/api/v1/artworks/search?q=${encodeURIComponent(query)}&fields=id,title,image_id,is_public_domain&limit=6`;
+      const data = await fetch(url).then(r=>r.json());
+      return (data.data || []).filter(item => item.image_id && item.is_public_domain).map(item => ({ title:item.title || 'Art Institute image', url:`https://www.artic.edu/iiif/2/${item.image_id}/full/843,/0/default.jpg`, license:'Public Domain', source:'Art Institute of Chicago' })).slice(0,4);
+    }
+
+    function selectedSources(){
+      const arr = [];
+      if($('srcWikimedia').checked) arr.push(['Wikimedia', fetchWikimedia]);
+      if($('srcOpenverse').checked) arr.push(['Openverse', fetchOpenverse]);
+      if($('srcMet').checked) arr.push(['The Met', fetchMet]);
+      if($('srcArtIC').checked) arr.push(['ArtIC', fetchArtIC]);
+      return arr;
+    }
+
+    function renderSourceInfo(items){
+      if(!items.length){
+        $('source').textContent = 'No entraron texturas remotas válidas. Se siguen usando las procedurales internas.';
+        $('thumbs').innerHTML = '';
+        return;
+      }
+      $('thumbs').innerHTML = items.slice(0,9).map(x => `<div class="thumb" title="${x.title}" style="background-image:url('${x.url}')"></div>`).join('');
+      $('source').innerHTML = items.map(x => `• <strong>${cap(x.title,80)}</strong><br><small>${x.source} · ${x.license}</small>`).join('<br>');
+    }
+
+    async function loadPublicTextures(){
+      const q = $('query').value.trim() || 'texture portrait fabric graffiti';
+      const sources = selectedSources();
+      if(!sources.length){ setStatus('Selecciona al menos una biblioteca pública.'); return; }
+      setStatus('Buscando texturas públicas...');
+      const collected = [];
+      for(const [name, fn] of sources){
+        try{
+          const items = await fn(q);
+          collected.push(...items);
+          setStatus(`Buscando texturas públicas... ${name} listo.`);
+        }catch(e){ /* keep going */ }
+      }
+      const dedup = [];
+      const seen = new Set();
+      for(const item of collected){ if(item.url && !seen.has(item.url)){ seen.add(item.url); dedup.push(item); } }
+      state.remoteSources = dedup.slice(0,12);
+      renderSourceInfo(state.remoteSources);
+      setStatus(`Cargando ${state.remoteSources.length} texturas remotas...`);
+      state.remoteTextures = await loadTextureObjectsFromUrls(state.remoteSources);
+      if(state.remoteTextures.length){ setStatus(`Cargadas ${state.remoteTextures.length} texturas remotas válidas. Reconstruyendo personaje...`); }
+      else { setStatus('No pude cargar texturas remotas útiles; me quedo con las procedurales internas.'); }
+      buildCharacter();
+    }
+
+    function spin360(){
+      if(!state.root) return;
+      state.spinTween = { start: state.root.rotation.y, end: state.root.rotation.y + Math.PI*2, t0: performance.now(), dur: 1400 };
+    }
+
+    async function saveBlob(blob, filename, mime){
+      if(window.AndroidBridge && window.AndroidBridge.saveBase64){
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const base64 = String(reader.result).split(',')[1];
+          window.AndroidBridge.saveBase64(filename, mime, base64);
+        };
+        reader.readAsDataURL(blob);
+        return;
+      }
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1200);
+    }
+
+    async function capturePNG(){
+      try{
+        const dataUrl = state.renderer.domElement.toDataURL('image/png');
+        const blob = await (await fetch(dataUrl)).blob();
+        await saveBlob(blob, `ogonam-${($('charName').value || 'character').toLowerCase().replace(/\s+/g,'-')}.png`, 'image/png');
+        setStatus('PNG guardado.');
+      }catch(e){
+        setStatus('No pude capturar PNG, seguramente por una textura remota bloqueada por CORS. Con procedurales sí debería funcionar.');
+      }
+    }
+
+    async function recordSpinVideo(){
+      if(state.recording) return;
+      state.recording = true;
+      setStatus('Grabando video 360...');
+      const canvas = state.renderer.domElement;
+      const stream = canvas.captureStream(30);
+      const chunks = [];
+      const mime = MediaRecorder.isTypeSupported('video/webm;codecs=vp9') ? 'video/webm;codecs=vp9' : 'video/webm';
+      const recorder = new MediaRecorder(stream, { mimeType: mime });
+      recorder.ondataavailable = e => { if(e.data.size) chunks.push(e.data); };
+      recorder.start();
+      const prevAuto = $('autoSpin').checked;
+      $('autoSpin').checked = false;
+      const startRot = state.root.rotation.y;
+      const frames = 120;
+      for(let i=0;i<=frames;i++){
+        state.root.rotation.y = startRot + (Math.PI*2)*(i/frames);
+        state.renderer.render(state.scene, state.camera);
+        await delay(1000/30);
+      }
+      recorder.stop();
+      await new Promise(res => recorder.onstop = res);
+      const blob = new Blob(chunks, { type:'video/webm' });
+      await saveBlob(blob, `ogonam-360-${Date.now()}.webm`, 'video/webm');
+      state.root.rotation.y = startRot;
+      $('autoSpin').checked = prevAuto;
+      state.recording = false;
+      setStatus('Video 360 guardado.');
+    }
+
+    async function recordSpinGif(){
+      if(state.recording) return;
+      if(typeof GIF === 'undefined'){
+        setStatus('La librería de GIF no ha cargado. Prueba con el video o recarga la página.');
+        return;
+      }
+      state.recording = true;
+      setStatus('Grabando GIF 360... esto tarda un poco.');
+      const prevAuto = $('autoSpin').checked;
+      $('autoSpin').checked = false;
+      const startRot = state.root.rotation.y;
+      const gif = new GIF({
+        workers: 2,
+        quality: 10,
+        workerScript: 'https://cdn.jsdelivr.net/npm/gif.js.optimized/dist/gif.worker.js',
+        width: state.renderer.domElement.width,
+        height: state.renderer.domElement.height
+      });
+      const frames = 48;
+      for(let i=0;i<frames;i++){
+        state.root.rotation.y = startRot + (Math.PI*2)*(i/frames);
+        state.renderer.render(state.scene, state.camera);
+        gif.addFrame(state.renderer.domElement, {copy:true, delay:60});
+        await delay(20);
+      }
+      gif.on('finished', (blob) => {
+        saveBlob(blob, `ogonam-360-${Date.now()}.gif`, 'image/gif');
+        state.root.rotation.y = startRot;
+        $('autoSpin').checked = prevAuto;
+        state.recording = false;
+        setStatus('GIF 360 guardado.');
+      });
+      gif.render();
+    }
+
+    function animate(t=0){
+      requestAnimationFrame(animate);
+      if($('autoSpin').checked && state.root && !state.recording) state.root.rotation.y += 0.0065;
+      if(state.spinTween && state.root && !state.recording){
+        const p = Math.min(1, (t - state.spinTween.t0) / state.spinTween.dur);
+        state.root.rotation.y = state.spinTween.start + (state.spinTween.end - state.spinTween.start) * (1 - Math.pow(1-p,3));
+        if(p >= 1) state.spinTween = null;
+      }
+      if(state.bodyGroup){
+        state.bodyGroup.children.forEach(obj => {
+          if(obj.userData && obj.userData.orbitSpeed){
+            obj.rotation.x += 0.01 * obj.userData.orbitSpeed;
+            obj.rotation.y += 0.008 * obj.userData.orbitSpeed;
+            const ph = t * 0.001 * obj.userData.orbitSpeed + obj.userData.phase;
+            obj.position.x += Math.sin(ph) * 0.0025 * obj.userData.radius;
+            obj.position.z += Math.cos(ph) * 0.0025 * obj.userData.radius;
+          }
+        });
+      }
+      state.controls && state.controls.update();
+      state.renderer && state.renderer.render(state.scene, state.camera);
+    }
+
+    function bindUI(){
+      $('createBtn').addEventListener('click', buildCharacter);
+      $('randomizeBtn').addEventListener('click', randomize);
+      $('loadTexturesBtn').addEventListener('click', loadPublicTextures);
+      $('spinBtn').addEventListener('click', spin360);
+      $('nameBtn').addEventListener('click', ()=>{ generateName(); buildCharacter(); });
+      $('captureBtn').addEventListener('click', capturePNG);
+      $('recordGifBtn').addEventListener('click', recordSpinGif);
+      $('recordVideoBtn').addEventListener('click', recordSpinVideo);
+      $('charName').addEventListener('input', updatePlate);
+      ['abstractness','heightScale','widthScale','poseChaos','chunkiness','vibe'].forEach(id => $(id).addEventListener('input', buildCharacter));
+      $('showBoard').addEventListener('change', buildCharacter);
+    }
+
+    async function init(){
+      try{
+        setStatus('Inicializando librerías 3D...');
+        createRenderer();
+        bindUI();
+        buildCharacter();
+        animate();
+        setStatus('Ogonam Mobile listo. Gira, toca, exporta y al lío.');
+      }catch(err){
+        console.error(err);
+        setStatus('Hubo un error al iniciar Three.js. Abre el archivo con conexión a internet para que carguen las librerías del visor 3D.');
+      }
+    }
+
+    init();
+  </script>
+
+  <script>
+    if('serviceWorker' in navigator && location.protocol !== 'file:') {
+      navigator.serviceWorker.register('./sw.js').catch(()=>{});
+    }
+  </script>
+</body>
+</html>
