@@ -138,11 +138,88 @@
 }
 </style>
 
+
+<style id="ogonam-art-mobile-fix">
+.badge {
+  display: none !important;
+}
+
+header {
+  justify-content: flex-start !important;
+  padding-top: 18px !important;
+}
+
+@media (max-width: 800px) {
+  html, body {
+    height: auto !important;
+    min-height: 100% !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    background: #05050a !important;
+  }
+
+  header {
+    position: relative !important;
+    top: auto !important;
+    padding: 20px 14px 12px 14px !important;
+  }
+
+  h1 {
+    font-size: 42px !important;
+    line-height: .85 !important;
+    max-width: 100% !important;
+  }
+
+  main {
+    display: flex !important;
+    flex-direction: column !important;
+    padding: 10px !important;
+    gap: 14px !important;
+  }
+
+  .viewportWrap {
+    order: 1 !important;
+    min-height: auto !important;
+    height: auto !important;
+  }
+
+  #viewport {
+    height: 58svh !important;
+    max-height: 560px !important;
+    min-height: 390px !important;
+    width: 100% !important;
+    touch-action: none !important;
+  }
+
+  .panel {
+    order: 2 !important;
+    max-height: none !important;
+    overflow: visible !important;
+    touch-action: auto !important;
+  }
+
+  .hint {
+    display: none !important;
+  }
+
+  button {
+    min-height: 54px !important;
+    font-size: 14px !important;
+  }
+
+  input,
+  select {
+    min-height: 42px !important;
+    font-size: 16px !important;
+  }
+}
+</style>
+
 </head>
 <body>
   <header>
     <h1>Ogonam</h1>
-    <div class="badge">3D ABSTRACTO<br>GIRO 360º<br>TEXTURAS PÚBLICAS</div>
+    
   </header>
 
   <main>
@@ -247,11 +324,11 @@
     };
 
     const paletteSets = {
-      normal:['#b6ff35','#ff4fd8','#5ce8ff','#f8f1d4','#1a1a24','#ffb238'],
-      night:['#1a1f3e','#3446ff','#66d4ff','#8ee8ff','#080816','#a38fff'],
-      sick:['#98ff00','#00ffe1','#ff00dd','#fffb00','#0d0d14','#ff6a00'],
-      mono:['#f5f5f5','#d7d7d7','#8f8f8f','#3a3a3a','#111111','#cfcfcf'],
-      sunset:['#ff5e57','#ff9966','#ffd166','#7bdff2','#6a4c93','#1b1c2f']
+      normal:['#e83b2f','#1357b7','#f6df55','#2c8b4b','#f5eee0','#191919','#f2a7b7'],
+      night:['#111111','#0f3e85','#c72f2d','#f5eee0','#1f5c3c','#f1d94f','#27273a'],
+      sick:['#e83b2f','#1357b7','#f6df55','#2c8b4b','#f5eee0','#ff7aaa','#111111'],
+      mono:['#f5eee0','#d7d0c8','#8f8a84','#3a3a3a','#111111','#cfc7bd'],
+      sunset:['#e83b2f','#f2a7b7','#f6df55','#1357b7','#2c8b4b','#f5eee0']
     };
 
     const textureLoader = new THREE.TextureLoader();
@@ -442,7 +519,7 @@
       const colors = paletteSets[$('vibe').value];
       const set = [];
       for(let i=0;i<6;i++){
-        const tx = textures[(baseIndex + i) % textures.length] || rand(textures);
+        const tx = textures[Math.floor(Math.random() * textures.length)] || rand(textures);
         set.push(makeFaceMaterial(tx, rand(colors)));
       }
       return set;
@@ -451,26 +528,133 @@
     function makeMaterial(idx){
       const colors = paletteSets[$('vibe').value];
       const txs = allTextures();
-      const texture = txs[idx % txs.length] || rand(txs);
+      const texture = txs[Math.floor(Math.random() * txs.length)] || rand(txs);
       return makeFaceMaterial(texture, rand(colors));
     }
 
-    function randomGeom(type='box', scale=1, abstractness=0.5, chunk=0.5){
-      const c = 0.55 + chunk * 0.9;
-      const blob = abstractness;
-      const pick = type === 'limb'
-        ? rand(['box','cylinder','capsule'])
-        : type === 'head'
-          ? rand(['box','sphere','octa'])
-          : rand(['box','cylinder','sphere','octa','cone']);
+    
+    function ogonamTubeGeometry(scale=1, abstractness=0.75, chunk=0.75){
+      const points = [];
+      const count = Math.floor(3 + Math.random() * (3 + abstractness * 5));
+      let x = 0, y = 0, z = 0;
+      points.push(new THREE.Vector3(x, y, z));
 
-      if(pick === 'sphere') return { geometry:new THREE.SphereGeometry(scale * rnd(0.32, 0.75) * c, Math.max(6, Math.floor(10 + blob*10)), Math.max(6, Math.floor(8 + blob*8))), faceSet:false };
-      if(pick === 'octa') return { geometry:new THREE.OctahedronGeometry(scale * rnd(0.38,0.85) * c, blob > 0.75 ? 1 : 0), faceSet:false };
-      if(pick === 'cone') return { geometry:new THREE.ConeGeometry(scale * rnd(0.28,0.68) * c, scale * rnd(0.7,1.6) * c, Math.max(5, Math.floor(8 + blob*6))), faceSet:false };
-      if(pick === 'capsule' && THREE.CapsuleGeometry) return { geometry:new THREE.CapsuleGeometry(scale * rnd(0.12,0.28) * c, scale * rnd(0.7,1.5) * c, 6, 10), faceSet:false };
-      if(pick === 'cylinder') return { geometry:new THREE.CylinderGeometry(scale * rnd(0.18,0.45) * c, scale * rnd(0.18,0.5) * c, scale * rnd(0.7,1.7) * c, Math.max(5, Math.floor(8 + blob*8))), faceSet:false };
-      return { geometry:new THREE.BoxGeometry(scale * rnd(0.42,1.15) * c, scale * rnd(0.42,1.45) * c, scale * rnd(0.35,1.1) * c), faceSet:true };
+      for(let i=0; i<count; i++){
+        const swing = scale * (0.32 + abstractness * 0.85);
+        x += rnd(-swing, swing);
+        y += rnd(-swing * 0.9, swing * 0.9);
+        z += rnd(-swing * 0.65, swing * 0.65);
+        points.push(new THREE.Vector3(x, y, z));
+      }
+
+      const curve = new THREE.CatmullRomCurve3(points);
+      const radius = scale * rnd(0.055, 0.16) * (0.75 + chunk * 1.15);
+      const geometry = new THREE.TubeGeometry(
+        curve,
+        Math.floor(28 + abstractness * 48),
+        radius,
+        Math.floor(8 + chunk * 10),
+        false
+      );
+      geometry.center();
+      return { geometry, faceSet:false };
     }
+
+    function ogonamRingGeometry(scale=1, abstractness=0.75, chunk=0.75){
+      const radius = scale * rnd(0.32, 0.82);
+      const tube = scale * rnd(0.045, 0.14) * (0.85 + chunk);
+      const arc = rnd(Math.PI * 1.05, Math.PI * 2.0);
+      const geometry = new THREE.TorusGeometry(
+        radius,
+        tube,
+        Math.floor(8 + chunk * 12),
+        Math.floor(36 + abstractness * 52),
+        arc
+      );
+      geometry.center();
+      return { geometry, faceSet:false };
+    }
+
+    function ogonamCapsuleGeometry(scale=1, abstractness=0.75, chunk=0.75){
+      if(THREE.CapsuleGeometry){
+        const radius = scale * rnd(0.09, 0.24) * (0.9 + chunk);
+        const length = scale * rnd(0.55, 1.75) * (0.75 + abstractness);
+        const geometry = new THREE.CapsuleGeometry(
+          radius,
+          length,
+          Math.floor(6 + chunk * 8),
+          Math.floor(10 + abstractness * 10)
+        );
+        return { geometry, faceSet:false };
+      }
+
+      const geometry = new THREE.CylinderGeometry(
+        scale * rnd(0.09,0.22),
+        scale * rnd(0.09,0.22),
+        scale * rnd(0.7,1.8),
+        Math.floor(10 + abstractness * 10)
+      );
+      return { geometry, faceSet:false };
+    }
+
+    function ogonamSoftBlobGeometry(scale=1, abstractness=0.75, chunk=0.75){
+      const roll = Math.random();
+      if(roll < 0.45){
+        const geometry = new THREE.SphereGeometry(
+          scale * rnd(0.28, 0.72) * (0.75 + chunk),
+          Math.floor(12 + abstractness * 12),
+          Math.floor(10 + abstractness * 10)
+        );
+        geometry.scale(rnd(0.75, 1.45), rnd(0.65, 1.35), rnd(0.65, 1.35));
+        return { geometry, faceSet:false };
+      }
+
+      if(roll < 0.75){
+        return ogonamRingGeometry(scale, abstractness, chunk);
+      }
+
+      return ogonamTubeGeometry(scale, abstractness, chunk);
+    }
+
+    function randomGeom(type='box', scale=1, abstractness=0.5, chunk=0.5){
+      const roll = Math.random();
+
+      // Tu obra tiene mucho trazo tubular y plastilina inflada.
+      if(type === 'limb'){
+        if(roll < 0.72) return ogonamTubeGeometry(scale * rnd(0.85,1.25), abstractness, chunk);
+        if(roll < 0.9) return ogonamCapsuleGeometry(scale * rnd(0.85,1.35), abstractness, chunk);
+        return ogonamRingGeometry(scale * rnd(0.55,1.05), abstractness, chunk);
+      }
+
+      if(type === 'head'){
+        if(roll < 0.55) return ogonamSoftBlobGeometry(scale * rnd(0.8,1.25), abstractness, chunk);
+        if(roll < 0.82) return ogonamRingGeometry(scale * rnd(0.55,1.0), abstractness, chunk);
+        return ogonamTubeGeometry(scale * rnd(0.8,1.2), abstractness, chunk);
+      }
+
+      if(type === 'torso'){
+        if(roll < 0.42) return ogonamRingGeometry(scale * rnd(0.65,1.25), abstractness, chunk);
+        if(roll < 0.78) return ogonamTubeGeometry(scale * rnd(0.95,1.55), abstractness, chunk);
+        return ogonamSoftBlobGeometry(scale * rnd(0.75,1.25), abstractness, chunk);
+      }
+
+      // Casi nada de cubos. Solo algún bloque como estructura.
+      if(roll < 0.08){
+        return {
+          geometry:new THREE.BoxGeometry(
+            scale * rnd(0.35,0.9),
+            scale * rnd(0.35,1.1),
+            scale * rnd(0.25,0.75)
+          ),
+          faceSet:true
+        };
+      }
+
+      if(roll < 0.46) return ogonamTubeGeometry(scale, abstractness, chunk);
+      if(roll < 0.78) return ogonamRingGeometry(scale, abstractness, chunk);
+      return ogonamCapsuleGeometry(scale, abstractness, chunk);
+    }
+
 
     function addMesh(parent, geomInfo, material, pos, rot=[0,0,0], shadow=true){
       const mesh = new THREE.Mesh(geomInfo.geometry || geomInfo, material);
@@ -578,7 +762,7 @@
         const nose = new THREE.Mesh(new THREE.CylinderGeometry(0.46,0.46,0.14,20), accent); nose.rotation.z = Math.PI/2; nose.position.set(2.02,0.18,0); state.boardGroup.add(nose);
         const tail = new THREE.Mesh(new THREE.CylinderGeometry(0.46,0.46,0.14,20), accent); tail.rotation.z = Math.PI/2; tail.position.set(-2.02,0.18,0); state.boardGroup.add(tail);
         const truckMat = new THREE.MeshStandardMaterial({color:0xd9d9d9, metalness:0.8, roughness:0.28}); state.materials.push(truckMat);
-        const wheelTex = allTextures()[idx % allTextures().length] || state.proceduralTextures[0];
+        const wheelTex = allTextures()[Math.floor(Math.random() * allTextures().length)] || state.proceduralTextures[0];
         const wheelMat = new THREE.MeshStandardMaterial({color:rand(colors), map:wheelTex, roughness:0.56, metalness:0.15}); state.materials.push(wheelMat);
         [[-1.35,0.12,0.52],[-1.35,0.12,-0.52],[1.35,0.12,0.52],[1.35,0.12,-0.52]].forEach((p, ix)=>{
           const wheel = new THREE.Mesh(new THREE.CylinderGeometry(0.22,0.22,0.18,18), wheelMat); wheel.rotation.z = Math.PI/2; wheel.position.set(...p); wheel.castShadow = true; state.boardGroup.add(wheel);
@@ -624,7 +808,7 @@
 
     async function fetchWikimedia(query){
       const q = encodeURIComponent(query + ' filetype:bitmap');
-      const url = `https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch=${q}&gsrnamespace=6&gsrlimit=12&prop=imageinfo&iiprop=url|extmetadata&iiurlwidth=1024&format=json&origin=*`;
+      const url = `https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch=${q}&gsrnamespace=6&gsrlimit=32&prop=imageinfo&iiprop=url|extmetadata&iiurlwidth=1024&format=json&origin=*`;
       const data = await fetch(url).then(r=>r.json());
       const pages = Object.values(data.query?.pages || {});
       return pages.map(p => {
@@ -635,7 +819,7 @@
     }
 
     async function fetchOpenverse(query){
-      const url = `https://api.openverse.org/v1/images/?q=${encodeURIComponent(query)}&license=cc0,pdm&license_type=all&page_size=8`;
+      const url = `https://api.openverse.org/v1/images/?q=${encodeURIComponent(query)}&license=cc0,pdm&license_type=all&page_size=20`;
       const data = await fetch(url).then(r=>r.json());
       return (data.results || []).map(item => ({ title:item.title || 'Openverse image', url:item.thumbnail || item.url, license:item.license || 'CC0/PDM', source:'Openverse' })).filter(x => x.url).slice(0,4);
     }
@@ -655,7 +839,7 @@
     }
 
     async function fetchArtIC(query){
-      const url = `https://api.artic.edu/api/v1/artworks/search?q=${encodeURIComponent(query)}&fields=id,title,image_id,is_public_domain&limit=6`;
+      const url = `https://api.artic.edu/api/v1/artworks/search?q=${encodeURIComponent(query)}&fields=id,title,image_id,is_public_domain&limit=12`;
       const data = await fetch(url).then(r=>r.json());
       return (data.data || []).filter(item => item.image_id && item.is_public_domain).map(item => ({ title:item.title || 'Art Institute image', url:`https://www.artic.edu/iiif/2/${item.image_id}/full/843,/0/default.jpg`, license:'Public Domain', source:'Art Institute of Chicago' })).slice(0,4);
     }
@@ -695,7 +879,7 @@
       const dedup = [];
       const seen = new Set();
       for(const item of collected){ if(item.url && !seen.has(item.url)){ seen.add(item.url); dedup.push(item); } }
-      state.remoteSources = dedup.slice(0,12);
+      state.remoteSources = dedup.sort(() => Math.random() - 0.5).slice(0,12);
       renderSourceInfo(state.remoteSources);
       setStatus(`Cargando ${state.remoteSources.length} texturas remotas...`);
       state.remoteTextures = await loadTextureObjectsFromUrls(state.remoteSources);
