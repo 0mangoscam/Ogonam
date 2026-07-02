@@ -5,49 +5,179 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Ogonam</title>
 <style>
-:root{--lime:#b6ff35;--cyan:#5ce8ff;--pink:#ff4fd8;--red:#e83b2f;--blue:#1357b7;--cream:#f5eee0;--line:#ffffff22}
+:root{
+  --lime:#b6ff35;--cyan:#5ce8ff;--pink:#ff4fd8;--red:#e83b2f;--blue:#1357b7;--cream:#f5eee0;
+  --panel:#171723;--line:#ffffff22;--ink:#101116;
+}
 *{box-sizing:border-box}
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050a;color:#fff;font-family:Arial Black,Impact,system-ui,sans-serif}
 body{display:flex;flex-direction:column}
-body:before{content:"";position:fixed;inset:0;pointer-events:none;background:linear-gradient(#ffffff07 50%,#00000012 50%);background-size:100% 4px;mix-blend-mode:overlay;opacity:.32;z-index:20}
-header{flex:0 0 auto;padding:max(12px,env(safe-area-inset-top)) 16px 8px;border-bottom:1px solid var(--line);background:#07070bcc;z-index:10}
-h1{margin:0;font-size:clamp(38px,13vw,64px);line-height:.82;letter-spacing:-2px;text-transform:uppercase;text-shadow:4px 4px 0 #000,-2px 0 var(--pink)}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;background:linear-gradient(#ffffff07 50%,#00000012 50%);background-size:100% 4px;mix-blend-mode:overlay;opacity:.35;z-index:20}
+header{flex:0 0 auto;padding:max(12px,env(safe-area-inset-top)) 14px 8px;border-bottom:1px solid var(--line);background:#07070bcc;z-index:10}
+.headerRow{display:flex;align-items:center;justify-content:space-between;gap:10px}
+h1{margin:0;font-size:clamp(36px,12vw,60px);line-height:.82;letter-spacing:-2px;text-transform:uppercase;text-shadow:4px 4px 0 #000,-2px 0 var(--pink)}
 main{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;gap:8px;padding:8px;overflow:hidden}
 #stageWrap{flex:1 1 auto;min-height:0;position:relative;border-radius:18px;border:2px solid #ffffff18;background:radial-gradient(circle at 50% 20%,#242845 0,#11111a 52%,#07070b 100%);overflow:hidden;box-shadow:inset 0 0 55px #000}
 #viewport{position:absolute;inset:0;width:100%;height:100%;touch-action:none}
-#toolDock{flex:0 0 230px;width:100%;display:flex;gap:10px;overflow-x:auto;overflow-y:hidden;padding:4px 4px 12px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;touch-action:pan-x}
-#toolDock::-webkit-scrollbar{height:0}.panel{flex:0 0 86vw;max-width:430px;min-width:292px;height:210px;overflow-y:auto;overflow-x:hidden;scroll-snap-align:start;background:linear-gradient(180deg,#1d1d2c,#11111a);border:2px solid #ffffff20;box-shadow:6px 6px 0 #00000080;border-radius:18px;padding:14px}
-h2{margin:0 0 10px;color:var(--cyan);text-transform:uppercase;font-size:18px;text-shadow:2px 2px #000}label{display:block;margin:8px 0 4px;font-size:12px;text-transform:uppercase;color:#ffffffb8}input,select{width:100%;min-height:42px;border-radius:8px;border:2px solid #ffffff25;padding:8px;font-size:16px;color:#111;background:white}input[type=range]{accent-color:var(--lime)}button{width:100%;min-height:52px;border:0;border-radius:14px;margin:6px 0;padding:10px 12px;font-family:Arial Black,Impact,system-ui,sans-serif;font-size:12px;text-transform:uppercase;color:#111;background:linear-gradient(180deg,var(--lime),#70b71a);box-shadow:4px 4px 0 #000}button.pink{background:linear-gradient(180deg,var(--pink),#a22088);color:white}button.blue{background:linear-gradient(180deg,var(--cyan),#208fc7)}button.danger{background:linear-gradient(180deg,#ff3535,#8d0000);color:white}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.small,#status{font:12px system-ui,sans-serif;color:#ffffffa8;line-height:1.35}#status{color:#d8f9ff}.gallery{display:flex;gap:12px;overflow-x:auto;padding:6px 2px 10px;perspective:1200px}.gallery::-webkit-scrollbar{height:0}.pokeCard{position:relative;flex:0 0 168px;height:236px;perspective:1000px}.pokeCard.empty{display:grid;place-items:center;height:120px;border:1px dashed #ffffff30;border-radius:16px;background:#0007;color:#ffffff80;font:12px system-ui,sans-serif}.pokeTilt{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .16s ease-out}.pokeInner{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .55s cubic-bezier(.2,.7,.1,1)}.pokeCard.flipped .pokeInner{transform:rotateY(180deg)}.pokeFace{position:absolute;inset:0;backface-visibility:hidden;border-radius:18px;overflow:hidden;box-shadow:0 10px 28px #0007, inset 0 0 0 2px #ffffff26}.pokeFront{background:linear-gradient(180deg,#f7ecb0,#dcb14d 36%,#4b2d0d 100%)}.pokeFront:before,.pokeBack:before{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent 0 35%,#ffffff4a 48%,transparent 60%);mix-blend-mode:screen;opacity:.55;pointer-events:none}.pokeFront .frame{position:absolute;inset:8px;border-radius:14px;background:#101018;border:2px solid #f6d66f;overflow:hidden}.pokeFront .art{position:absolute;left:10px;right:10px;top:34px;height:114px;border-radius:10px;border:2px solid #f7d673;background:linear-gradient(180deg,#20273f,#0d0d14);overflow:hidden}.pokeFront .art img{width:100%;height:100%;object-fit:cover;display:block}.pokeFront .title{position:absolute;left:14px;right:56px;top:10px;font:14px/1 Arial Black,Impact,sans-serif;letter-spacing:.2px;color:#181818;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.pokeFront .hp{position:absolute;right:14px;top:10px;font:12px/1 Arial Black,Impact,sans-serif;color:#181818}.pokeFront .meta{position:absolute;left:12px;right:12px;bottom:42px;display:flex;gap:6px;flex-wrap:wrap}.pokeFront .pill{padding:4px 7px;border-radius:999px;background:#f6e1a0;color:#181818;font:10px/1.1 Arial Black,Impact,sans-serif;text-transform:uppercase}.pokeFront .caption{position:absolute;left:12px;right:12px;bottom:10px;font:10px/1.2 system-ui,sans-serif;color:#f5e8c2}.pokeBack{background:radial-gradient(circle at 30% 25%,#3a97ff,#0d1638 58%,#06070b 100%);transform:rotateY(180deg)}.pokeBack .ring{position:absolute;inset:26px;border-radius:50%;border:10px solid #ffcc4a;box-shadow:0 0 0 8px #224ed4 inset}.pokeBack .dot{position:absolute;left:50%;top:50%;width:54px;height:54px;transform:translate(-50%,-50%);border-radius:50%;background:#ff5252;border:8px solid #fff;box-shadow:0 0 0 8px #1b1b24}.pokeBack .logo{position:absolute;left:12px;right:12px;top:18px;text-align:center;font:18px/1 Arial Black,Impact,sans-serif;letter-spacing:1px;color:#ffe475;text-shadow:2px 2px 0 #1c2d7a}.pokeBack .stats{position:absolute;left:16px;right:16px;bottom:18px;padding:10px;border-radius:12px;background:#0007;color:#fff;font:11px/1.35 system-ui,sans-serif}.cardActions{position:absolute;left:8px;right:8px;bottom:8px;display:flex;gap:6px;z-index:3}.cardBtn{flex:1;border:0;border-radius:10px;padding:8px 6px;font:10px/1 Arial Black,Impact,sans-serif;text-transform:uppercase;background:#ffffffd6;color:#111;box-shadow:2px 2px 0 #0006}.cardBtn.alt{background:#ffe063}.cardBtn.danger{background:#ff8b8b}
-body.art-mode #stageWrap{aspect-ratio:1/1;border-color:#ffe063;box-shadow:inset 0 0 80px #000,0 0 0 2px #ffe06340}body.art-mode #toolDock{flex-basis:250px}body.art-mode #viewport{filter:saturate(1.08) contrast(1.04)}.headerRow{display:flex;align-items:center;justify-content:space-between;gap:12px}.headerBtn{width:auto;min-height:42px;margin:0;padding:10px 14px;border-radius:999px;background:linear-gradient(180deg,var(--cyan),#208fc7);color:#111;font-size:12px;box-shadow:4px 4px 0 #000}.dangerMini{background:linear-gradient(180deg,#ff3535,#8d0000)!important;color:#fff!important}#albumOverlay{position:fixed;inset:0;z-index:80;background:linear-gradient(180deg,#090b12f8,#05050af7);display:none;padding:max(12px,env(safe-area-inset-top)) 10px max(12px,env(safe-area-inset-bottom));backdrop-filter:blur(8px)}body.album-open #albumOverlay{display:block}#albumShell{height:100%;display:flex;flex-direction:column;gap:12px;background:linear-gradient(180deg,#121426,#0b0c14);border:1px solid #ffffff1e;border-radius:22px;padding:14px;box-shadow:0 20px 60px #0008}.albumTop{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.albumTop h2{margin:0;color:var(--lime)}.albumGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:16px;overflow:auto;padding:8px 2px 14px;align-content:start}.albumGrid .pokeCard{flex:0 0 auto;width:100%;max-width:190px;justify-self:center}#editorHud{display:none;position:fixed;left:10px;right:10px;top:max(10px,env(safe-area-inset-top));z-index:85;pointer-events:none}body.editor-open #editorHud{display:block}#editorHud>*{pointer-events:auto}.editorBadge{display:inline-block;padding:9px 12px;border-radius:999px;background:#ffe063;color:#111;font:12px/1 Arial Black,Impact,sans-serif;box-shadow:4px 4px 0 #000;margin-bottom:8px}.editorHelp{max-width:360px;padding:10px 12px;border-radius:14px;background:#000b;border:1px solid #ffffff1f;color:#fff;font:11px/1.35 system-ui,sans-serif;box-shadow:4px 4px 0 #0006}.editorBar{margin-top:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}.editorBar .headerBtn{min-height:40px;padding:9px 12px}#editorTimer{margin-left:auto;padding:10px 14px;border-radius:999px;background:#000c;border:1px solid #ffffff22;color:#fff;font:14px/1 Arial Black,Impact,sans-serif;box-shadow:4px 4px 0 #000}body.editor-open header,body.editor-open #toolDock{display:none!important}body.editor-open main{padding:0!important}body.editor-open #stageWrap{position:fixed!important;inset:0!important;z-index:70;border-radius:0!important;border:0!important;box-shadow:none!important;aspect-ratio:auto!important}body.editor-open #viewport{position:absolute!important;inset:0!important}.pokeFace .frame{display:block}@media (orientation:landscape){header{padding:max(8px,env(safe-area-inset-top)) 12px 6px}h1{font-size:clamp(28px,7vw,46px)}main{flex-direction:row;gap:10px}#stageWrap{flex:1 1 auto;height:100%}#toolDock{flex:0 0 350px;height:100%;flex-direction:column;overflow-x:hidden;overflow-y:auto;scroll-snap-type:y mandatory;padding:4px 8px 8px}.panel{flex:0 0 auto;width:100%;max-width:none;min-width:0;height:auto;min-height:176px}}
+#toolDock{flex:0 0 240px;width:100%;display:flex;gap:10px;overflow-x:auto;overflow-y:hidden;padding:4px 4px 12px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;touch-action:pan-x}
+#toolDock::-webkit-scrollbar,.gallery::-webkit-scrollbar{height:0}
+.panel{flex:0 0 86vw;max-width:430px;min-width:292px;height:220px;overflow-y:auto;scroll-snap-align:start;background:linear-gradient(180deg,#1d1d2c,#11111a);border:2px solid #ffffff20;box-shadow:6px 6px 0 #00000080;border-radius:18px;padding:14px}
+h2{margin:0 0 10px;color:var(--cyan);text-transform:uppercase;font-size:18px;text-shadow:2px 2px #000}
+label{display:block;margin:8px 0 4px;font-size:12px;text-transform:uppercase;color:#ffffffb8}
+input,select{width:100%;min-height:42px;border-radius:8px;border:2px solid #ffffff25;padding:8px;font-size:16px;color:#111;background:#fff}
+input[type="range"]{accent-color:var(--lime)}
+button{width:100%;min-height:54px;border:0;border-radius:14px;margin:6px 0;padding:10px 12px;font-family:Arial Black,Impact,system-ui,sans-serif;font-size:13px;text-transform:uppercase;color:#111;background:linear-gradient(180deg,var(--lime),#70b71a);box-shadow:4px 4px 0 #000}
+button.pink{background:linear-gradient(180deg,var(--pink),#a22088);color:#fff}
+button.blue{background:linear-gradient(180deg,var(--cyan),#208fc7)}
+button.danger{background:linear-gradient(180deg,#ff3535,#8d0000);color:#fff}
+button.headerBtn{width:auto;min-height:42px;margin:0;padding:10px 14px;border-radius:999px;background:linear-gradient(180deg,var(--cyan),#208fc7);font-size:12px}
+button.headerBtn.pink{background:linear-gradient(180deg,var(--pink),#a22088);color:#fff}
+button.headerBtn.dangerMini{background:linear-gradient(180deg,#ff3535,#8d0000);color:#fff}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.small{font:12px system-ui,sans-serif;color:#ffffffa8;line-height:1.35}
+#status{font:12px system-ui,sans-serif;color:#d8f9ff;line-height:1.35}
+.gallery{display:flex;gap:12px;overflow:auto;padding:6px 2px 10px;perspective:1200px}
+.albumGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:16px;overflow:auto;padding:8px 2px 14px;align-content:start}
+.pokeCard{position:relative;flex:0 0 168px;width:168px;height:236px;perspective:1000px}
+.albumGrid .pokeCard{width:100%;max-width:190px;justify-self:center}
+.pokeCard.empty{display:grid;place-items:center;height:120px;border:1px dashed #ffffff30;border-radius:16px;background:#0007;color:#ffffff80;font:12px system-ui,sans-serif}
+.pokeTilt{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .16s ease-out}
+.pokeInner{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .55s cubic-bezier(.2,.7,.1,1)}
+.pokeCard.flipped .pokeInner{transform:rotateY(180deg)}
+.pokeFace{position:absolute;inset:0;backface-visibility:hidden;border-radius:18px;overflow:hidden;box-shadow:0 10px 28px #0007,inset 0 0 0 2px #ffffff26}
+.pokeFront{background:linear-gradient(180deg,#f7ecb0,#dcb14d 36%,#4b2d0d 100%)}
+.pokeFront::before,.pokeBack::before{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent 0 35%,#ffffff4a 48%,transparent 60%);mix-blend-mode:screen;opacity:.55;pointer-events:none}
+.pokeCard.foil .pokeFront::after,.pokeCard.shiny .pokeFront::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 0 25%,#ffffff4d 36%,#7ae5ff44 45%,#ff5fca33 56%,#fff27544 66%,transparent 78%);mix-blend-mode:screen;animation:glint 3.2s linear infinite}
+.pokeCard.shiny .pokeFace{box-shadow:0 12px 32px #0008,inset 0 0 0 2px #fff9c0,0 0 24px #ffe55a66}
+.pokeFront .frame{position:absolute;inset:8px;border-radius:14px;background:#101018;border:2px solid #f6d66f;overflow:hidden}
+.pokeCard.shiny .frame{border-color:#fff4a2}
+.pokeFront .title{position:absolute;left:14px;right:58px;top:10px;font:14px/1 Arial Black,Impact,sans-serif;letter-spacing:.2px;color:#181818;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pokeFront .hp{position:absolute;right:14px;top:10px;font:12px/1 Arial Black,Impact,sans-serif;color:#181818}
+.pokeFront .art{position:absolute;left:10px;right:10px;top:34px;height:112px;border-radius:10px;border:2px solid #f7d673;background:linear-gradient(180deg,#20273f,#0d0d14);overflow:hidden}
+.pokeFront .art img{width:100%;height:100%;object-fit:cover;display:block}
+.pokeFront .meta{position:absolute;left:12px;right:12px;bottom:62px;display:flex;gap:6px;flex-wrap:wrap}
+.pokeFront .pill{padding:4px 7px;border-radius:999px;background:#f6e1a0;color:#181818;font:10px/1.1 Arial Black,Impact,sans-serif;text-transform:uppercase}
+.pokeFront .statsRow{position:absolute;left:12px;right:12px;bottom:32px;display:flex;justify-content:space-between;gap:6px;font:10px/1 Arial Black,Impact,sans-serif;color:#ffe7ae}
+.pokeFront .caption{position:absolute;left:12px;right:12px;bottom:10px;font:10px/1.2 system-ui,sans-serif;color:#f5e8c2}
+.pokeBack{background:radial-gradient(circle at 30% 25%,#3a97ff,#0d1638 58%,#06070b 100%);transform:rotateY(180deg)}
+.pokeBack .ring{position:absolute;inset:26px;border-radius:50%;border:10px solid #ffcc4a;box-shadow:0 0 0 8px #224ed4 inset}
+.pokeBack .dot{position:absolute;left:50%;top:50%;width:54px;height:54px;transform:translate(-50%,-50%);border-radius:50%;background:#ff5252;border:8px solid #fff;box-shadow:0 0 0 8px #1b1b24}
+.pokeBack .logo{position:absolute;left:12px;right:12px;top:18px;text-align:center;font:18px/1 Arial Black,Impact,sans-serif;letter-spacing:1px;color:#ffe475;text-shadow:2px 2px 0 #1c2d7a}
+.pokeBack .stats{position:absolute;left:16px;right:16px;bottom:18px;padding:10px;border-radius:12px;background:#0007;color:#fff;font:11px/1.35 system-ui,sans-serif}
+.cardActions{position:absolute;left:8px;right:8px;bottom:8px;display:flex;gap:6px;z-index:3}
+.cardBtn{flex:1;border:0;border-radius:10px;padding:8px 6px;font:10px/1 Arial Black,Impact,sans-serif;text-transform:uppercase;background:#ffffffd6;color:#111;box-shadow:2px 2px 0 #0006}
+.cardBtn.alt{background:#ffe063}.cardBtn.danger{background:#ff8b8b}
+#albumOverlay{position:fixed;inset:0;z-index:80;background:linear-gradient(180deg,#090b12f8,#05050af7);display:none;padding:max(12px,env(safe-area-inset-top)) 10px max(12px,env(safe-area-inset-bottom));backdrop-filter:blur(8px)}
+body.album-open #albumOverlay{display:block}
+#albumShell{height:100%;display:flex;flex-direction:column;gap:12px;background:linear-gradient(180deg,#121426,#0b0c14);border:1px solid #ffffff1e;border-radius:22px;padding:14px;box-shadow:0 20px 60px #0008}
+.albumTop{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.albumTop h2{margin:0;color:var(--lime)}
+.albumControls{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:8px 0}
+.albumControls .left,.albumControls .right{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.albumControls .pageInfo{font:13px/1 Arial Black,Impact,sans-serif;color:#fff;padding:8px 12px;border-radius:999px;background:#0008;border:1px solid #ffffff1f}
+#albumHint{padding:8px 10px;border-radius:12px;background:#0008;border:1px solid #ffffff1a}
+#editorHud{display:none;position:fixed;left:10px;right:10px;top:max(10px,env(safe-area-inset-top));z-index:85;pointer-events:none}
+body.editor-open #editorHud{display:block}
+#editorHud>*{pointer-events:auto}.editorBadge{display:inline-block;padding:9px 12px;border-radius:999px;background:#ffe063;color:#111;font:12px/1 Arial Black,Impact,sans-serif;box-shadow:4px 4px 0 #000;margin-bottom:8px}.editorHelp{max-width:420px;padding:10px 12px;border-radius:14px;background:#000b;border:1px solid #ffffff1f;color:#fff;font:11px/1.35 system-ui,sans-serif;box-shadow:4px 4px 0 #0006}.editorBar{margin-top:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}.editorBar .headerBtn{min-height:40px;padding:9px 12px}#editorTimer{margin-left:auto;padding:10px 14px;border-radius:999px;background:#000c;border:1px solid #ffffff22;color:#fff;font:14px/1 Arial Black,Impact,sans-serif;box-shadow:4px 4px 0 #000}body.editor-open header,body.editor-open #toolDock{display:none!important}body.editor-open main{padding:0!important}body.editor-open #stageWrap{position:fixed!important;inset:0!important;z-index:70;border-radius:0!important;border:0!important;box-shadow:none!important;aspect-ratio:auto!important}body.editor-open #viewport{position:absolute!important;inset:0!important}
+body.showcase-mode #stageWrap{aspect-ratio:1/1;border-color:#ffe063;box-shadow:inset 0 0 80px #000,0 0 0 2px #ffe06340}
+body.showcase-mode #viewport{filter:saturate(1.08) contrast(1.04)}
+.albumPage{display:none}.albumPage.active{display:grid}
+@keyframes glint{0%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
+@media (orientation:landscape){
+  header{padding:max(8px,env(safe-area-inset-top)) 12px 6px}
+  h1{font-size:clamp(28px,7vw,46px)}
+  main{flex-direction:row;gap:10px}
+  #stageWrap{flex:1 1 auto;height:100%}
+  #toolDock{flex:0 0 340px;height:100%;flex-direction:column;overflow-x:hidden;overflow-y:auto;scroll-snap-type:y mandatory;padding:4px 8px 8px}
+  .panel{flex:0 0 auto;width:100%;max-width:none;min-width:0;height:auto;min-height:175px}
+}
 </style>
 </head>
 <body>
-<header><div class="headerRow"><h1>OGONAM</h1><button id="openAlbumBtn" class="headerBtn">OGONAMS</button></div></header>
+<header>
+  <div class="headerRow">
+    <h1>OGONAM</h1>
+    <button id="openAlbumBtn" class="headerBtn">OGONAMS</button>
+  </div>
+</header>
 <main>
-<section id="stageWrap"><div id="viewport"></div></section>
-<nav id="toolDock">
-<section class="panel"><h2>Herramientas</h2><label>Nombre</label><input id="charName" value="BARRIO GHOST" maxlength="22"/><label>Búsqueda de texturas</label><input id="query" value="canvas clay abstract red blue"/><p class="small">Pulsa Enter para cargar texturas públicas compatibles.</p><div class="grid2"><button id="randomizeBtn" class="pink">Randomizar</button><button id="evolveBtn">Evolucionar</button><button id="saveCharBtn" class="blue">Guardar pieza</button><button id="explodeBtn" class="danger">No pulses este botón</button></div></section>
-<section class="panel"><h2>Exportar</h2><div class="grid2"><button id="recordVideoBtn" class="blue">Guardar video</button><button id="recordGifBtn">Guardar GIF</button><button id="savePngBtn">Guardar PNG</button><button id="artModeBtn" class="pink">Modo obra · 5 MIN</button></div><p class="small">Vídeo, GIF y PNG. El modo obra pone la escena en formato más artístico y cuadrado.</p></section>
-<section class="panel"><h2>Forma</h2><label>Abstracción</label><input id="abstractness" type="range" min="0" max="100" value="78"/><label>Caos</label><input id="poseChaos" type="range" min="0" max="100" value="70"/><label>Grosor</label><input id="chunkiness" type="range" min="0" max="100" value="68"/><p class="small">Abstracción = complejidad · Caos = dispersión · Grosor = espesor real.</p></section>
-<section class="panel"><h2>Luz</h2><label>Ambiente</label><select id="ambience"><option value="studio">Estudio Ogonam</option><option value="red">Luz roja</option><option value="blue">Luz azul</option><option value="pink">Luz rosa</option><option value="green">Luz verde</option><option value="mono">Monocromo</option></select><p id="status">Iniciando Ogonam...</p></section>
-
-</nav>
+  <section id="stageWrap"><div id="viewport"></div></section>
+  <nav id="toolDock">
+    <section class="panel">
+      <h2>Herramientas</h2>
+      <label>Nombre</label>
+      <input id="charName" value="BARRIO GHOST" maxlength="22" />
+      <label>Búsqueda de texturas</label>
+      <input id="query" value="canvas clay abstract red blue" />
+      <p class="small">Pulsa Enter para cargar texturas públicas compatibles.</p>
+      <div class="grid2">
+        <button id="randomizeBtn" class="pink">Randomizar</button>
+        <button id="evolveBtn">Evolucionar</button>
+        <button id="saveCharBtn" class="blue">Guardar pieza</button>
+        <button id="explodeBtn" class="danger">No pulses este botón</button>
+      </div>
+    </section>
+    <section class="panel">
+      <h2>Exportar</h2>
+      <div class="grid2">
+        <button id="recordVideoBtn" class="blue">Guardar video</button>
+        <button id="recordGifBtn">Guardar GIF</button>
+        <button id="savePngBtn">Guardar PNG</button>
+        <button id="showcaseBtn" class="pink">Modo Instagram: OFF</button>
+        <button id="artModeBtn" class="blue">Modo obra · 5 MIN</button>
+      </div>
+      <p class="small">Vídeo, GIF, PNG, modo Instagram y modo obra con edición temporal a pantalla completa.</p>
+    </section>
+    <section class="panel">
+      <h2>Forma</h2>
+      <label>Abstracción</label><input id="abstractness" type="range" min="0" max="100" value="78" />
+      <label>Caos</label><input id="poseChaos" type="range" min="0" max="100" value="70" />
+      <label>Grosor</label><input id="chunkiness" type="range" min="0" max="100" value="68" />
+      <p class="small">Abstracción = complejidad · Caos = dispersión · Grosor = espesor real.</p>
+    </section>
+    <section class="panel">
+      <h2>Luz</h2>
+      <label>Ambiente</label>
+      <select id="ambience">
+        <option value="studio">Estudio Ogonam</option>
+        <option value="red">Luz roja</option>
+        <option value="blue">Luz azul</option>
+        <option value="pink">Luz rosa</option>
+        <option value="green">Luz verde</option>
+        <option value="mono">Monocromo</option>
+      </select>
+      <p id="status">Iniciando Ogonam...</p>
+    </section>
+  </nav>
 </main>
 <section id="albumOverlay">
   <div id="albumShell">
     <div class="albumTop">
       <div>
         <h2>ÁLBUM OGONAMS</h2>
-        <p class="small">Tus criaturas guardadas viven aquí como cartas 3D coleccionables.</p>
+        <p class="small">Cartas 3D coleccionables con rarezas, tipos, foil, shiny y stats inventados.</p>
       </div>
       <button id="closeAlbumBtn" class="headerBtn">Cerrar</button>
     </div>
-    <div id="albumGallery" class="gallery albumGrid"></div>
+    <div class="albumControls">
+      <div class="left">
+        <button id="albumPrevBtn" class="headerBtn">Página anterior</button>
+        <div id="albumPageInfo" class="pageInfo">Página 1 / 1</div>
+        <button id="albumNextBtn" class="headerBtn">Página siguiente</button>
+      </div>
+      <div class="right">
+        <button id="albumFilterAll" class="headerBtn">Todas</button>
+        <button id="albumFilterShiny" class="headerBtn pink">Shiny</button>
+        <button id="albumFilterFoil" class="headerBtn">Foil</button>
+      </div>
+    </div>
+    <p id="albumHint" class="small">Toca la carta para girarla. Desliza encima para inclinarla. Usa Invocar para recuperar la criatura.</p>
+    <div id="albumGallery" class="albumGrid"></div>
   </div>
 </section>
 <section id="editorHud">
   <div class="editorBadge">Modo obra</div>
-  <div id="editorHelp" class="editorHelp">Toca una pieza para seleccionarla y arrástrala. Usa mover o rotar.</div>
+  <div id="editorHelp" class="editorHelp">Toca una pieza para seleccionarla y arrástrala. Usa mover o rotar. Se cierra automáticamente en 5 minutos.</div>
   <div class="editorBar">
     <button id="editorMoveBtn" class="headerBtn">Mover</button>
     <button id="editorRotateBtn" class="headerBtn">Rotar</button>
@@ -56,60 +186,258 @@ body.art-mode #stageWrap{aspect-ratio:1/1;border-color:#ffe063;box-shadow:inset 
   </div>
 </section>
 <script src="https://cdn.jsdelivr.net/npm/gif.js.optimized/dist/gif.js"></script>
-<script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"}}</script>
+<script type="importmap">
+{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"}}
+</script>
 <script type="module">
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { TransformControls } from 'three/addons/controls/TransformControls.js';
-const $=id=>document.getElementById(id);
-const state={scene:null,camera:null,renderer:null,controls:null,root:null,floor:null,grid:null,textures:[],procedural:[],materials:[],recording:false,lights:{},seed:(Date.now()>>>0),rng:null,gallery:[],artMode:false,editMode:false,transform:null,selectedMesh:null,editTimer:null,editDeadline:0,raycaster:new THREE.Raycaster(),pointer:new THREE.Vector2()};window.state=state;
-const palettes={og:['#e83b2f','#1357b7','#f6df55','#2c8b4b','#f5eee0','#191919','#f2a7b7'],red:['#e83b2f','#f5eee0','#1357b7','#2c8b4b','#f6df55','#111111'],blue:['#1357b7','#f5eee0','#e83b2f','#2c8b4b','#f6df55','#111111'],pink:['#f2a7b7','#f5eee0','#e83b2f','#1357b7','#2c8b4b','#111111'],green:['#8dbb32','#f5eee0','#e83b2f','#1357b7','#f6df55','#111111'],mono:['#f5eee0','#d8d0c8','#888888','#242424','#111111']};
-const environments={studio:{palette:'og',bg:0x11111a,fog:0x07070b,floor:0x11111a,grid1:0x5ce8ff,grid2:0x2e2e44,hemiSky:0xffffff,hemiGround:0x111122,hemiI:1.2,key:0xffffff,keyI:2.4,keyPos:[4,8,6],fill:0x5ce8ff,fillI:10,fillPos:[4,2,5],rim:0xff4fd8,rimI:16,rimPos:[-4,4,-4]},red:{palette:'red',bg:0x6e1611,fog:0x2a0907,floor:0x200606,grid1:0xffb36b,grid2:0x472222,hemiSky:0xffead8,hemiGround:0x290b08,hemiI:1.05,key:0xffd9bf,keyI:2.6,keyPos:[4,7,6],fill:0xff8445,fillI:8,fillPos:[-4,2,5],rim:0xff5d73,rimI:13,rimPos:[3,4,-4]},blue:{palette:'blue',bg:0x123f85,fog:0x0a1833,floor:0x0b1528,grid1:0x91d6ff,grid2:0x21344f,hemiSky:0xeef7ff,hemiGround:0x0e1733,hemiI:1.1,key:0xd9ecff,keyI:2.4,keyPos:[4,8,6],fill:0x5ce8ff,fillI:9,fillPos:[-4,2,4],rim:0x7aa8ff,rimI:12,rimPos:[-3,4,-4]},pink:{palette:'pink',bg:0x9a5369,fog:0x35141f,floor:0x2c1118,grid1:0xffa6dd,grid2:0x4d2938,hemiSky:0xffeef7,hemiGround:0x261018,hemiI:1.08,key:0xffe4ef,keyI:2.5,keyPos:[4,8,6],fill:0xff90c8,fillI:8,fillPos:[4,2,4],rim:0xff4fd8,rimI:14,rimPos:[-4,4,-3]},green:{palette:'green',bg:0x668f24,fog:0x1d2b0d,floor:0x17220a,grid1:0xd2ff61,grid2:0x324020,hemiSky:0xf4ffe0,hemiGround:0x18220b,hemiI:1.0,key:0xeeffd2,keyI:2.5,keyPos:[4,8,6],fill:0x9cff65,fillI:8,fillPos:[-4,2,4],rim:0xc2ff49,rimI:12,rimPos:[3,4,-4]},mono:{palette:'mono',bg:0x151515,fog:0x090909,floor:0x101010,grid1:0x999999,grid2:0x2c2c2c,hemiSky:0xf8f8f8,hemiGround:0x111111,hemiI:1.0,key:0xffffff,keyI:2.25,keyPos:[4,8,6],fill:0xa0a0a0,fillI:6,fillPos:[4,2,4],rim:0xe0e0e0,rimI:10,rimPos:[-4,4,-4]}};
-const textureLoader=new THREE.TextureLoader();textureLoader.setCrossOrigin('anonymous');
-function setStatus(t){$('status').textContent=t}function mulberry32(a){return function(){let t=a+=0x6D2B79F5;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return((t^(t>>>14))>>>0)/4294967296}}function nextRandom(){return state.rng?state.rng():Math.random()}function rnd(a,b){return a+nextRandom()*(b-a)}function rand(a){return a[Math.floor(nextRandom()*a.length)]}function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(nextRandom()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
-function currentEnvironment(){return environments[$('ambience')?.value||'studio']||environments.studio}function currentPalette(){return palettes[currentEnvironment().palette]||palettes.og}
-function prepTexture(tx){tx.colorSpace=THREE.SRGBColorSpace;tx.wrapS=THREE.RepeatWrapping;tx.wrapT=THREE.RepeatWrapping;tx.repeat.set(rnd(.8,2.6),rnd(.8,2.6));tx.needsUpdate=true;return tx}
-function makeCanvasTexture(kind,c1,c2){const canvas=document.createElement('canvas');canvas.width=256;canvas.height=256;const ctx=canvas.getContext('2d');ctx.fillStyle=c1;ctx.fillRect(0,0,256,256);if(kind==='canvas'){for(let y=0;y<256;y+=4){ctx.fillStyle=y%8===0?c2:c1;ctx.globalAlpha=.16;ctx.fillRect(0,y,256,2)}for(let x=0;x<256;x+=5){ctx.fillStyle=c2;ctx.globalAlpha=.10;ctx.fillRect(x,0,1,256)}ctx.globalAlpha=1}if(kind==='checker'){for(let y=0;y<8;y++)for(let x=0;x<8;x++){ctx.fillStyle=(x+y)%2?c1:c2;ctx.fillRect(x*32,y*32,32,32)}}if(kind==='noise'){for(let i=0;i<2200;i++){ctx.fillStyle=nextRandom()>.5?c1:c2;ctx.globalAlpha=nextRandom()*.45;ctx.fillRect(nextRandom()*256,nextRandom()*256,nextRandom()*18,nextRandom()*18)}ctx.globalAlpha=1}if(kind==='stripe'){for(let i=0;i<22;i++){ctx.fillStyle=i%2?c1:c2;ctx.fillRect(i*13,0,7,256)}}return prepTexture(new THREE.CanvasTexture(canvas))}
-function rebuildProcedural(){const pal=currentPalette();state.procedural=[makeCanvasTexture('canvas',rand(pal),rand(pal)),makeCanvasTexture('checker',rand(pal),rand(pal)),makeCanvasTexture('noise',rand(pal),rand(pal)),makeCanvasTexture('stripe',rand(pal),rand(pal)),makeCanvasTexture('canvas','#f5eee0',rand(pal)),makeCanvasTexture('noise','#111111',rand(pal))]}
-function texturePool(){return state.textures.length?shuffle([...state.textures,...state.procedural]):shuffle(state.procedural)}function makeMat(){const pool=texturePool();const mat=new THREE.MeshStandardMaterial({color:0xffffff,map:pool.length?rand(pool):null,roughness:.74,metalness:.06});state.materials.push(mat);return mat}
-function clearRoot(){if(!state.root)return;while(state.root.children.length){const child=state.root.children.pop();child.traverse(obj=>{if(obj.geometry)obj.geometry.dispose();if(obj.material){if(Array.isArray(obj.material))obj.material.forEach(m=>m.dispose&&m.dispose());else obj.material.dispose&&obj.material.dispose()}})}state.materials.forEach(m=>m.dispose&&m.dispose());state.materials=[]}
-function applyEnvironment(){const env=currentEnvironment();if(!state.scene)return;state.scene.background=new THREE.Color(env.bg);state.scene.fog=new THREE.Fog(env.fog,10,30);if(state.floor&&state.floor.material)state.floor.material.color.setHex(env.floor);if(state.grid){const mats=Array.isArray(state.grid.material)?state.grid.material:[state.grid.material];mats.forEach(m=>{m.transparent=true;m.opacity=.18;if(m.color)m.color.setHex(env.grid1)})}if(state.lights.hemi){state.lights.hemi.color.setHex(env.hemiSky);state.lights.hemi.groundColor.setHex(env.hemiGround);state.lights.hemi.intensity=env.hemiI}if(state.lights.key){state.lights.key.color.setHex(env.key);state.lights.key.intensity=env.keyI;state.lights.key.position.set(...env.keyPos)}if(state.lights.fill){state.lights.fill.color.setHex(env.fill);state.lights.fill.intensity=env.fillI;state.lights.fill.position.set(...env.fillPos)}if(state.lights.rim){state.lights.rim.color.setHex(env.rim);state.lights.rim.intensity=env.rimI;state.lights.rim.position.set(...env.rimPos)}}
-function createScene(){const v=$('viewport');state.renderer=new THREE.WebGLRenderer({antialias:true,alpha:true,preserveDrawingBuffer:true});state.renderer.setPixelRatio(Math.min(devicePixelRatio,2));state.renderer.setSize(v.clientWidth,v.clientHeight);state.renderer.outputColorSpace=THREE.SRGBColorSpace;v.appendChild(state.renderer.domElement);state.scene=new THREE.Scene();state.camera=new THREE.PerspectiveCamera(42,v.clientWidth/v.clientHeight,.1,100);state.camera.position.set(0,2.4,7.4);state.controls=new OrbitControls(state.camera,state.renderer.domElement);state.controls.enableDamping=true;state.controls.dampingFactor=.08;state.controls.target.set(0,2,0);state.controls.minDistance=3.8;state.controls.maxDistance=13;state.lights.hemi=new THREE.HemisphereLight(0xffffff,0x111122,1.2);state.scene.add(state.lights.hemi);state.lights.key=new THREE.DirectionalLight(0xffffff,2.4);state.lights.key.position.set(4,8,6);state.scene.add(state.lights.key);state.lights.rim=new THREE.PointLight(0xff4fd8,16,20,2);state.lights.rim.position.set(-4,4,-4);state.scene.add(state.lights.rim);state.lights.fill=new THREE.PointLight(0x5ce8ff,10,18,2);state.lights.fill.position.set(4,2,5);state.scene.add(state.lights.fill);state.floor=new THREE.Mesh(new THREE.CircleGeometry(5.5,64),new THREE.MeshStandardMaterial({color:0x11111a,roughness:.92,metalness:.05}));state.floor.rotation.x=-Math.PI/2;state.scene.add(state.floor);state.grid=new THREE.GridHelper(11,14,0x5ce8ff,0x2e2e44);const mats=Array.isArray(state.grid.material)?state.grid.material:[state.grid.material];mats.forEach(m=>{m.transparent=true;m.opacity=.18});state.scene.add(state.grid);state.root=new THREE.Group();state.scene.add(state.root);state.transform=new TransformControls(state.camera,state.renderer.domElement);state.transform.visible=false;state.transform.enabled=false;state.transform.setSize(.85);state.transform.addEventListener('dragging-changed',e=>{state.controls.enabled=!e.value});state.transform.addEventListener('objectChange',()=>render());state.scene.add(state.transform);state.renderer.domElement.addEventListener('pointerdown',onStagePointerDown);applyEnvironment();window.addEventListener('resize',resize)}
-function resize(){const v=$('viewport');if(!state.renderer||!state.camera)return;state.renderer.setSize(v.clientWidth,v.clientHeight);state.camera.aspect=v.clientWidth/v.clientHeight;state.camera.updateProjectionMatrix();fitCameraToObject()}
-function tubeGeometry(scale=1,wild=.8,thick=.7){const pts=[];let x=0,y=0,z=0;pts.push(new THREE.Vector3(x,y,z));const count=Math.floor(rnd(4,7+wild*6));for(let i=0;i<count;i++){x+=rnd(-.45,.45)*scale*(.85+wild);y+=rnd(-.45,.45)*scale*(.85+wild);z+=rnd(-.34,.34)*scale*(.85+wild);pts.push(new THREE.Vector3(x,y,z))}const curve=new THREE.CatmullRomCurve3(pts);const radius=scale*rnd(.045,.12)*(.55+thick*1.15);const geo=new THREE.TubeGeometry(curve,56,radius,14,false);geo.center();return geo}
-function ringGeometry(scale=1,wild=.8,thick=.7){const major=scale*rnd(.30,.88);const minor=scale*rnd(.035,.11)*(.55+thick*1.25);const arc=rnd(Math.PI*(1.05+wild*.2),Math.PI*(1.45+wild*.6));const geo=new THREE.TorusGeometry(major,minor,14,72,arc);geo.center();return geo}function capsuleGeometry(scale=1,wild=.8,thick=.7){const radius=scale*rnd(.09,.20)*(.55+thick*1.15);const length=scale*rnd(.40,1.35)*(.85+wild*.7);const geo=new THREE.CapsuleGeometry(radius,length,8,14);geo.center();return geo}function blobGeometry(scale=1,wild=.8,thick=.7){const geo=new THREE.SphereGeometry(scale*rnd(.26,.66),18,14);geo.scale(rnd(.75,1.45),rnd(.55,1.35),rnd(.55,1.35));if(wild>.7){geo.rotateX(rnd(-.6,.6));geo.rotateY(rnd(-.6,.6))}geo.center();return geo}
-function add(geo,pos,rot,scl=1){const mesh=new THREE.Mesh(geo,makeMat());mesh.position.set(pos[0],pos[1],pos[2]);mesh.rotation.set(rot[0],rot[1],rot[2]);mesh.scale.setScalar(scl);mesh.userData.spin=rnd(-.008,.008);state.root.add(mesh);return mesh}
-function attachSelectedMesh(obj){if(!obj){if(state.transform){state.transform.detach();state.transform.visible=false;state.transform.enabled=false}state.selectedMesh=null;return}state.selectedMesh=obj;state.transform.attach(obj);state.transform.visible=true;state.transform.enabled=true;setStatus('Pieza seleccionada. Arrástrala en modo obra.')}
-function onStagePointerDown(e){if(!state.editMode||!state.renderer||!state.camera||!state.root)return;const rect=state.renderer.domElement.getBoundingClientRect();state.pointer.x=((e.clientX-rect.left)/rect.width)*2-1;state.pointer.y=-((e.clientY-rect.top)/rect.height)*2+1;state.raycaster.setFromCamera(state.pointer,state.camera);const hits=state.raycaster.intersectObjects(state.root.children,true);const meshHit=hits.find(h=>h.object&&h.object.isMesh);if(meshHit)attachSelectedMesh(meshHit.object)}
-function setEditorTransformMode(mode){if(!state.transform)return;state.transform.setMode(mode);setStatus(mode==='rotate'?'Modo rotación activo.':'Modo mover activo.')}
-function formatCountdown(ms){const total=Math.max(0,Math.ceil(ms/1000));const m=String(Math.floor(total/60)).padStart(2,'0');const s=String(total%60).padStart(2,'0');return `${m}:${s}`}
-function updateEditorTimer(){const el=$('editorTimer');if(!el)return;const left=state.editDeadline-Date.now();el.textContent=formatCountdown(left);if(left<=0)exitEditorMode('Modo obra finalizado. Volviendo al layout normal.')}
-function enterEditorMode(){if(state.editMode)return;closeAlbum();state.artMode=true;state.editMode=true;state.editDeadline=Date.now()+5*60*1000;document.body.classList.add('editor-open');const btn=$('artModeBtn');if(btn)btn.textContent='Modo obra activo';if(state.editTimer)clearInterval(state.editTimer);state.editTimer=setInterval(updateEditorTimer,1000);updateEditorTimer();attachSelectedMesh(null);resize();fitCameraToObject();setStatus('Modo obra activo: toca una pieza para seleccionarla y edítala durante 5 min.')}
-function exitEditorMode(message='Modo obra cerrado.'){if(!state.editMode)return;state.editMode=false;document.body.classList.remove('editor-open');if(state.editTimer){clearInterval(state.editTimer);state.editTimer=null}attachSelectedMesh(null);const btn=$('artModeBtn');if(btn)btn.textContent='Modo obra · 5 MIN';resize();fitCameraToObject();setStatus(message)}
-function openAlbum(){document.body.classList.add('album-open');renderGallery()}
-function closeAlbum(){document.body.classList.remove('album-open')}
-function buildCharacter(){clearRoot();state.rng=mulberry32(state.seed||1);const wild=Number($('abstractness').value)/100,chaos=Number($('poseChaos').value)/100,thick=Number($('chunkiness').value)/100;rebuildProcedural();applyEnvironment();state.root.position.set(0,1.65,0);state.root.rotation.set(0,0,0);add(blobGeometry(1.05,wild,thick),[0,0,0],[rnd(0,Math.PI),rnd(0,Math.PI),rnd(0,Math.PI)],1.05);add(ringGeometry(1.18,wild,thick),[0,.12,0],[rnd(0,Math.PI),rnd(0,Math.PI),rnd(0,Math.PI)],1);add(tubeGeometry(1.1,wild,thick),[0,.1,0],[rnd(0,Math.PI),rnd(0,Math.PI),rnd(0,Math.PI)],1);const count=Math.floor(10+wild*16);const spreadX=.55+chaos*1.7,spreadY=.45+chaos*1.45,spreadZ=.45+chaos*1.4;for(let i=0;i<count;i++){const pick=nextRandom();let geo;if(pick<.42)geo=tubeGeometry(rnd(.45,1.05),wild,thick);else if(pick<.67)geo=ringGeometry(rnd(.32,.86),wild,thick);else if(pick<.88)geo=capsuleGeometry(rnd(.38,1.0),wild,thick);else geo=blobGeometry(rnd(.30,.82),wild,thick);add(geo,[rnd(-spreadX,spreadX),rnd(-spreadY,spreadY),rnd(-spreadZ,spreadZ)],[rnd(0,Math.PI),rnd(0,Math.PI),rnd(0,Math.PI)],rnd(.80,1.22))}fitCameraToObject();state.rng=null;setStatus(state.textures.length?'Texturas públicas aplicadas.':'Texturas internas aplicadas. Pulsa Enter en la búsqueda para cargar públicas.')}
-function fitCameraToObject(){if(!state.root||!state.camera||!state.controls)return;const box=new THREE.Box3().setFromObject(state.root);const size=box.getSize(new THREE.Vector3()).length();const center=box.getCenter(new THREE.Vector3());state.controls.target.copy(center);const dist=state.editMode?Math.max(4.2,size*.58):Math.max(5.4,size*.72);state.camera.position.set(center.x,center.y+(state.editMode?.8:1.2),center.z+dist);state.camera.lookAt(center);state.controls.update()}
-async function fetchWikimedia(q){const url=`https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(q+' texture public domain canvas art clay')}&gsrnamespace=6&gsrlimit=34&prop=imageinfo&iiprop=url|extmetadata&iiurlwidth=1024&format=json&origin=*`;const data=await fetch(url).then(r=>r.json());const pages=Object.values(data.query?.pages||{});return pages.map(p=>{const info=p.imageinfo?.[0];const meta=info?.extmetadata||{};const lic=`${meta.LicenseShortName?.value||''} ${meta.UsageTerms?.value||''}`;return{title:p.title,url:info?.thumburl||info?.url,license:lic}}).filter(x=>x.url&&/Public domain|CC0|PDM|CC-0|Zero|Creative Commons|CC BY/i.test(x.license)).slice(0,12)}
-async function fetchAsDataUrl(url){const res=await fetch(url);const blob=await res.blob();return await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=reject;reader.readAsDataURL(blob)})}
-async function loadPublicTextures(){const q=$('query').value.trim()||'canvas clay abstract';setStatus('Buscando texturas públicas...');try{const sources=shuffle(await fetchWikimedia(q));const loaded=[];for(const src of sources){try{const dataUrl=await fetchAsDataUrl(src.url);const tx=await textureLoader.loadAsync(dataUrl);loaded.push(prepTexture(tx))}catch(e){}if(loaded.length>=8)break}if(loaded.length){state.textures=loaded;setStatus(`Cargadas ${loaded.length} texturas públicas compatibles.`);buildCharacter()}else setStatus('No entraron texturas públicas. Uso internas.')}catch(e){setStatus('La búsqueda falló. Uso texturas internas.')}}
-async function randomize(){const names=['MANGO GHOST','TURBO MACHINE','CANVAS DOG','BARRIO LOOP','RED PLASTIC','BLUE MUTANT','SANTS BLOOM','SOFT SIGNAL','MANGO ORBIT','LIMON GHOST'];state.rng=null;state.seed=(Math.random()*0xffffffff)>>>0;$('charName').value=names[Math.floor(Math.random()*names.length)];$('abstractness').value=Math.floor(55+Math.random()*45);$('poseChaos').value=Math.floor(35+Math.random()*60);$('chunkiness').value=Math.floor(30+Math.random()*65);const ambs=['studio','red','blue','pink','green','mono'];$('ambience').value=ambs[Math.floor(Math.random()*ambs.length)];buildCharacter();if(($('query').value||'').trim()){try{await loadPublicTextures()}catch(e){}}}
-function evolve(){state.seed=((state.seed||1)+Math.floor(Math.random()*999999)+17)>>>0;$('abstractness').value=Math.max(0,Math.min(100,Number($('abstractness').value)+Math.floor(Math.random()*21-10)));$('poseChaos').value=Math.max(0,Math.min(100,Number($('poseChaos').value)+Math.floor(Math.random()*21-10)));$('chunkiness').value=Math.max(0,Math.min(100,Number($('chunkiness').value)+Math.floor(Math.random()*21-10)));buildCharacter();setStatus('Pieza evolucionada sin perder su ADN.')}
-function explode(){const pieces=[];state.root.traverse(obj=>{if(obj.isMesh){obj.userData.v=new THREE.Vector3(rnd(-.16,.16),rnd(.06,.24),rnd(-.16,.16));obj.userData.r=new THREE.Vector3(rnd(-.12,.12),rnd(-.12,.12),rnd(-.12,.12));pieces.push(obj);if(obj.material){obj.material.transparent=true;obj.material.opacity=1}}});let tick=0;const timer=setInterval(()=>{tick++;for(const obj of pieces){obj.position.add(obj.userData.v);obj.userData.v.y-=.008;obj.rotation.x+=obj.userData.r.x;obj.rotation.y+=obj.userData.r.y;obj.rotation.z+=obj.userData.r.z;if(obj.material)obj.material.opacity=Math.max(0,obj.material.opacity-.015)}if(tick>80){clearInterval(timer);clearRoot();setStatus('El personaje ha explotado.')}} ,16)}
-async function saveBlob(blob,filename){if(window.OgonamAndroid&&window.OgonamAndroid.saveBase64){const reader=new FileReader();reader.onloadend=()=>{const base64=String(reader.result).split(',')[1];window.OgonamAndroid.saveBase64(filename,blob.type||'application/octet-stream',base64)};reader.readAsDataURL(blob)}else{const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=filename;a.click();URL.revokeObjectURL(url)}}
-async function savePng(){render();const data=state.renderer.domElement.toDataURL('image/png');const base64=data.split(',')[1];const filename=`ogonam-${Date.now()}.png`;if(window.OgonamAndroid&&window.OgonamAndroid.saveBase64){window.OgonamAndroid.saveBase64(filename,'image/png',base64)}else{const a=document.createElement('a');a.href=data;a.download=filename;a.click()}setStatus('PNG guardado en Descargas/Ogonam.')}async function recordVideo(){if(state.recording)return;state.recording=true;setStatus('Grabando video 360...');const stream=state.renderer.domElement.captureStream(30);const chunks=[];const mime=MediaRecorder.isTypeSupported('video/webm;codecs=vp9')?'video/webm;codecs=vp9':'video/webm';const recorder=new MediaRecorder(stream,{mimeType:mime});recorder.ondataavailable=e=>{if(e.data.size)chunks.push(e.data)};recorder.start();const start=state.root.rotation.y;for(let i=0;i<=120;i++){state.root.rotation.y=start+Math.PI*2*(i/120);render();await new Promise(r=>setTimeout(r,1000/30))}recorder.stop();await new Promise(r=>recorder.onstop=r);await saveBlob(new Blob(chunks,{type:'video/webm'}),`ogonam-360-${Date.now()}.webm`);state.recording=false;setStatus('Video guardado en Descargas/Ogonam.')}
-async function recordGif(){if(state.recording)return;if(typeof GIF==='undefined'){setStatus('La librería GIF no cargó. Prueba video.');return}state.recording=true;setStatus('Grabando GIF 360...');const gif=new GIF({workers:2,quality:12,workerScript:'https://cdn.jsdelivr.net/npm/gif.js.optimized/dist/gif.worker.js',width:state.renderer.domElement.width,height:state.renderer.domElement.height});const start=state.root.rotation.y;for(let i=0;i<48;i++){state.root.rotation.y=start+Math.PI*2*(i/48);render();gif.addFrame(state.renderer.domElement,{copy:true,delay:60});await new Promise(r=>setTimeout(r,20))}gif.on('finished',async blob=>{await saveBlob(blob,`ogonam-360-${Date.now()}.gif`);state.recording=false;setStatus('GIF guardado en Descargas/Ogonam.')});gif.render()}
-function currentPreset(){return{name:$('charName').value||'SIN NOMBRE',query:$('query').value||'',seed:state.seed,abstractness:$('abstractness').value,poseChaos:$('poseChaos').value,chunkiness:$('chunkiness').value,ambience:$('ambience').value,artMode:!!state.artMode,created:Date.now(),thumbnail:state.renderer?.domElement?.toDataURL('image/png')||''}}
-function loadGallery(){try{state.gallery=JSON.parse(localStorage.getItem('ogonamGalleryV2')||'[]')}catch(e){state.gallery=[]}}
-function saveGallery(){localStorage.setItem('ogonamGalleryV2',JSON.stringify(state.gallery.slice(0,24)))}
-function saveCharacter(){const preset=currentPreset();state.gallery.unshift(preset);state.gallery=state.gallery.slice(0,24);saveGallery();renderGallery();setStatus('Pieza guardada como carta en la galería.')}
-function loadPreset(p){$('charName').value=p.name||'OGONAM';$('query').value=p.query||'';state.seed=p.seed||1;$('abstractness').value=p.abstractness??78;$('poseChaos').value=p.poseChaos??70;$('chunkiness').value=p.chunkiness??68;$('ambience').value=p.ambience||'studio';state.artMode=!!p.artMode;document.body.classList.toggle('art-mode',state.artMode);const artBtn=$('artModeBtn');if(artBtn)artBtn.textContent=`Modo obra: ${state.artMode?'ON':'OFF'}`;buildCharacter();setStatus('Pieza recuperada de galería.')}
-function removePreset(index){state.gallery.splice(index,1);saveGallery();renderGallery();setStatus('Carta eliminada de la galería.')}
-function cardTheme(amb){const map={studio:['#ffe48b','#ca8e2d','#4b2d0d'],red:['#ffd0b2','#e85d3b','#671710'],blue:['#dcecff','#4d86ff','#16356d'],pink:['#ffd6ea','#ff69b6','#682547'],green:['#e8ffb0','#8acb3e','#27400b'],mono:['#f0f0f0','#9e9e9e','#222']};return map[amb]||map.studio}
-function renderGallery(){const g=$('gallery');if(!g)return;g.innerHTML='';if(!state.gallery.length){const empty=document.createElement('div');empty.className='pokeCard empty';empty.textContent='Sin cartas guardadas';g.appendChild(empty);return}state.gallery.forEach((p,i)=>{const colors=cardTheme(p.ambience||'studio');const card=document.createElement('div');card.className='pokeCard';card.innerHTML=`<div class="pokeTilt"><div class="pokeInner"><div class="pokeFace pokeFront" style="background:linear-gradient(180deg,${colors[0]},${colors[1]} 36%,${colors[2]} 100%)"><div class="frame"><div class="title">${(p.name||'OGONAM').replace(/[<>&]/g,'').slice(0,18)}</div><div class="hp">OG-${String(i+1).padStart(3,'0')}</div><div class="art">${p.thumbnail?`<img src="${p.thumbnail}" alt="${(p.name||'Ogonam').replace(/"/g,'')}"/>`:''}</div><div class="meta"><span class="pill">${p.ambience||'studio'}</span><span class="pill">ABS ${p.abstractness}</span><span class="pill">GRO ${p.chunkiness}</span></div><div class="caption">Criatura Ogonam · ${new Date(p.created||Date.now()).toLocaleDateString()}</div></div><div class="cardActions"><button class="cardBtn invokeBtn">Invocar</button><button class="cardBtn alt flipBtn">Girar</button></div></div><div class="pokeFace pokeBack"><div class="logo">OGONAM</div><div class="ring"></div><div class="dot"></div><div class="stats">Nombre: ${(p.name||'OGONAM').replace(/[<>&]/g,'')}<br>Ambiente: ${p.ambience||'studio'}<br>Abstracción: ${p.abstractness}<br>Caos: ${p.poseChaos}<br>Grosor: ${p.chunkiness}</div><div class="cardActions"><button class="cardBtn invokeBtn">Invocar</button><button class="cardBtn danger deleteBtn">Borrar</button></div></div></div></div>`;const tilt=card.querySelector('.pokeTilt');const inner=card.querySelector('.pokeInner');card.addEventListener('pointermove',e=>{const r=card.getBoundingClientRect();const px=(e.clientX-r.left)/r.width;const py=(e.clientY-r.top)/r.height;const ry=(px-.5)*16;const rx=(.5-py)*14;tilt.style.transform=`rotateX(${rx}deg) rotateY(${ry}deg)`});card.addEventListener('pointerleave',()=>{tilt.style.transform='rotateX(0deg) rotateY(0deg)'});card.addEventListener('click',e=>{if(e.target.closest('button'))return;card.classList.toggle('flipped')});card.querySelectorAll('.flipBtn').forEach(btn=>btn.addEventListener('click',e=>{e.stopPropagation();card.classList.toggle('flipped')}));card.querySelectorAll('.invokeBtn').forEach(btn=>btn.addEventListener('click',e=>{e.stopPropagation();loadPreset(p)}));const del=card.querySelector('.deleteBtn');if(del)del.addEventListener('click',e=>{e.stopPropagation();removePreset(i)});g.appendChild(card)})}
-function render(){if(state.renderer&&state.scene&&state.camera)state.renderer.render(state.scene,state.camera)}function animate(){requestAnimationFrame(animate);if(state.root&&!state.recording&&!state.editMode){state.root.rotation.y+=.004;state.root.children.forEach(obj=>{obj.rotation.x+=obj.userData.spin||0;obj.rotation.z+=(obj.userData.spin||0)*.6})}if(state.controls)state.controls.update();render()}
-function bind(){$('query').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();loadPublicTextures()}});$('randomizeBtn').addEventListener('click',randomize);$('evolveBtn').addEventListener('click',evolve);$('saveCharBtn').addEventListener('click',saveCharacter);$('explodeBtn').addEventListener('click',explode);$('recordVideoBtn').addEventListener('click',recordVideo);$('recordGifBtn').addEventListener('click',recordGif);$('savePngBtn').addEventListener('click',savePng);$('artModeBtn').addEventListener('click',enterEditorMode);$('openAlbumBtn').addEventListener('click',openAlbum);$('closeAlbumBtn').addEventListener('click',closeAlbum);$('editorMoveBtn').addEventListener('click',()=>setEditorTransformMode('translate'));$('editorRotateBtn').addEventListener('click',()=>setEditorTransformMode('rotate'));$('editorExitBtn').addEventListener('click',()=>exitEditorMode('Modo obra cerrado manualmente.'));['abstractness','poseChaos','chunkiness','ambience'].forEach(id=>{$(id).addEventListener('input',buildCharacter);$(id).addEventListener('change',buildCharacter)})}
-function init(){createScene();bind();loadGallery();renderGallery();const artBtn=$('artModeBtn');if(artBtn)artBtn.textContent='Modo obra · 5 MIN';buildCharacter();animate();setTimeout(loadPublicTextures,900)}init();
+
+const $ = id => document.getElementById(id);
+const STORAGE_KEY = 'ogonamGalleryV5';
+const PAGE_SIZE = 8;
+
+const state = {
+  scene:null,camera:null,renderer:null,controls:null,root:null,floor:null,grid:null,
+  textures:[],procedural:[],materials:[],recording:false,lights:{},
+  seed:(Date.now()>>>0),rng:null,gallery:[],galleryFilter:'all',galleryPage:0,
+  editMode:false,transform:null,selectedMesh:null,editTimer:null,editDeadline:0,
+  raycaster:new THREE.Raycaster(),pointer:new THREE.Vector2(),showcaseMode:false
+};
+window.state = state;
+
+const palettes = {
+  og:['#e83b2f','#1357b7','#f6df55','#2c8b4b','#f5eee0','#191919','#f2a7b7'],
+  red:['#e83b2f','#f5eee0','#1357b7','#2c8b4b','#f6df55','#111111'],
+  blue:['#1357b7','#f5eee0','#e83b2f','#2c8b4b','#f6df55','#111111'],
+  pink:['#f2a7b7','#f5eee0','#e83b2f','#1357b7','#2c8b4b','#111111'],
+  green:['#8dbb32','#f5eee0','#e83b2f','#1357b7','#f6df55','#111111'],
+  mono:['#f5eee0','#d8d0c8','#888888','#242424','#111111']
+};
+const environments = {
+  studio:{palette:'og',bg:0x11111a,fog:0x07070b,floor:0x11111a,grid1:0x5ce8ff,grid2:0x2e2e44,hemiSky:0xffffff,hemiGround:0x111122,hemiI:1.2,key:0xffffff,keyI:2.4,keyPos:[4,8,6],fill:0x5ce8ff,fillI:10,fillPos:[4,2,5],rim:0xff4fd8,rimI:16,rimPos:[-4,4,-4]},
+  red:{palette:'red',bg:0x6e1611,fog:0x2a0907,floor:0x200606,grid1:0xffb36b,grid2:0x472222,hemiSky:0xffead8,hemiGround:0x290b08,hemiI:1.05,key:0xffd9bf,keyI:2.6,keyPos:[4,7,6],fill:0xff8445,fillI:8,fillPos:[-4,2,5],rim:0xff5d73,rimI:13,rimPos:[3,4,-4]},
+  blue:{palette:'blue',bg:0x123f85,fog:0x0a1833,floor:0x0b1528,grid1:0x91d6ff,grid2:0x21344f,hemiSky:0xeef7ff,hemiGround:0x0e1733,hemiI:1.1,key:0xd9ecff,keyI:2.4,keyPos:[4,8,6],fill:0x5ce8ff,fillI:9,fillPos:[-4,2,4],rim:0x7aa8ff,rimI:12,rimPos:[-3,4,-4]},
+  pink:{palette:'pink',bg:0x9a5369,fog:0x35141f,floor:0x2c1118,grid1:0xffa6dd,grid2:0x4d2938,hemiSky:0xffeef7,hemiGround:0x261018,hemiI:1.08,key:0xffe4ef,keyI:2.5,keyPos:[4,8,6],fill:0xff90c8,fillI:8,fillPos:[4,2,4],rim:0xff4fd8,rimI:14,rimPos:[-4,4,-3]},
+  green:{palette:'green',bg:0x668f24,fog:0x1d2b0d,floor:0x17220a,grid1:0xd2ff61,grid2:0x324020,hemiSky:0xf4ffe0,hemiGround:0x18220b,hemiI:1.0,key:0xeeffd2,keyI:2.5,keyPos:[4,8,6],fill:0x9cff65,fillI:8,fillPos:[-4,2,4],rim:0xc2ff49,rimI:12,rimPos:[3,4,-4]},
+  mono:{palette:'mono',bg:0x151515,fog:0x090909,floor:0x101010,grid1:0x999999,grid2:0x2c2c2c,hemiSky:0xf8f8f8,hemiGround:0x111111,hemiI:1.0,key:0xffffff,keyI:2.25,keyPos:[4,8,6],fill:0xa0a0a0,fillI:6,fillPos:[4,2,4],rim:0xe0e0e0,rimI:10,rimPos:[-4,4,-4]}
+};
+
+const typeByAmbience = { studio:'Canvas', red:'Inferno', blue:'Aqua', pink:'Dream', green:'Bloom', mono:'Noir' };
+const rarityTable = [
+  { name:'Común', weight:40, foil:false, shiny:false },
+  { name:'Infrecuente', weight:25, foil:false, shiny:false },
+  { name:'Rara', weight:16, foil:true, shiny:false },
+  { name:'Épica', weight:10, foil:true, shiny:false },
+  { name:'Legendaria', weight:6, foil:true, shiny:false },
+  { name:'Shiny', weight:3, foil:true, shiny:true }
+];
+
+const textureLoader = new THREE.TextureLoader();
+textureLoader.setCrossOrigin('anonymous');
+
+function setStatus(t){ $('status').textContent = t; }
+function mulberry32(a){ return function(){ let t=a+=0x6D2B79F5; t=Math.imul(t^(t>>>15),t|1); t^=t+Math.imul(t^(t>>>7),t|61); return((t^(t>>>14))>>>0)/4294967296; }; }
+function nextRandom(){ return state.rng ? state.rng() : Math.random(); }
+function rnd(a,b){ return a + nextRandom()*(b-a); }
+function rand(arr){ return arr[Math.floor(nextRandom()*arr.length)]; }
+function shuffle(arr){ const a=[...arr]; for(let i=a.length-1;i>0;i--){ const j=Math.floor(nextRandom()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function currentEnvironment(){ return environments[$('ambience')?.value || 'studio'] || environments.studio; }
+function currentPalette(){ return palettes[currentEnvironment().palette] || palettes.og; }
+function clamp(n,min,max){ return Math.max(min,Math.min(max,n)); }
+
+function weightedPick(seedRand){
+  const total = rarityTable.reduce((a,b)=>a+b.weight,0);
+  let roll = seedRand()*total;
+  for(const item of rarityTable){
+    if((roll-=item.weight) <= 0) return item;
+  }
+  return rarityTable[0];
+}
+
+function prepTexture(tx){ tx.colorSpace=THREE.SRGBColorSpace; tx.wrapS=THREE.RepeatWrapping; tx.wrapT=THREE.RepeatWrapping; tx.repeat.set(rnd(.8,2.6),rnd(.8,2.6)); tx.needsUpdate=true; return tx; }
+function makeCanvasTexture(kind,c1,c2){
+  const canvas=document.createElement('canvas'); canvas.width=256; canvas.height=256;
+  const ctx=canvas.getContext('2d'); ctx.fillStyle=c1; ctx.fillRect(0,0,256,256);
+  if(kind==='canvas'){ for(let y=0;y<256;y+=4){ ctx.fillStyle=y%8===0?c2:c1; ctx.globalAlpha=.16; ctx.fillRect(0,y,256,2);} for(let x=0;x<256;x+=5){ ctx.fillStyle=c2; ctx.globalAlpha=.10; ctx.fillRect(x,0,1,256);} ctx.globalAlpha=1; }
+  if(kind==='checker'){ for(let y=0;y<8;y++) for(let x=0;x<8;x++){ ctx.fillStyle=(x+y)%2?c1:c2; ctx.fillRect(x*32,y*32,32,32);} }
+  if(kind==='noise'){ for(let i=0;i<2200;i++){ ctx.fillStyle=nextRandom()>.5?c1:c2; ctx.globalAlpha=nextRandom()*.45; ctx.fillRect(nextRandom()*256,nextRandom()*256,nextRandom()*18,nextRandom()*18);} ctx.globalAlpha=1; }
+  if(kind==='stripe'){ for(let i=0;i<22;i++){ ctx.fillStyle=i%2?c1:c2; ctx.fillRect(i*13,0,7,256);} }
+  return prepTexture(new THREE.CanvasTexture(canvas));
+}
+function rebuildProcedural(){
+  const pal=currentPalette();
+  state.procedural=[
+    makeCanvasTexture('canvas',rand(pal),rand(pal)),
+    makeCanvasTexture('checker',rand(pal),rand(pal)),
+    makeCanvasTexture('noise',rand(pal),rand(pal)),
+    makeCanvasTexture('stripe',rand(pal),rand(pal)),
+    makeCanvasTexture('canvas','#f5eee0',rand(pal)),
+    makeCanvasTexture('noise','#111111',rand(pal))
+  ];
+}
+function texturePool(){ return state.textures.length ? shuffle([...state.textures,...state.procedural]) : shuffle(state.procedural); }
+function makeMat(){ const pool=texturePool(); const mat=new THREE.MeshStandardMaterial({color:0xffffff,map:pool.length?rand(pool):null,roughness:.74,metalness:.06}); state.materials.push(mat); return mat; }
+function clearRoot(){ if(state.transform){ state.transform.detach(); state.transform.visible=false; state.transform.enabled=false; } state.selectedMesh=null; if(!state.root) return; while(state.root.children.length){ const child=state.root.children.pop(); child.traverse(obj=>{ if(obj.geometry) obj.geometry.dispose(); if(obj.material){ if(Array.isArray(obj.material)) obj.material.forEach(m=>m.dispose&&m.dispose()); else obj.material.dispose&&obj.material.dispose(); }});} state.materials.forEach(m=>m.dispose&&m.dispose()); state.materials=[]; }
+function applyEnvironment(){
+  const env=currentEnvironment(); if(!state.scene) return;
+  state.scene.background=new THREE.Color(env.bg); state.scene.fog=new THREE.Fog(env.fog,10,30);
+  if(state.floor?.material) state.floor.material.color.setHex(env.floor);
+  if(state.grid){ const mats=Array.isArray(state.grid.material)?state.grid.material:[state.grid.material]; if(mats[0]?.color) mats[0].color.setHex(env.grid1); if(mats[1]?.color) mats[1].color.setHex(env.grid2); mats.forEach(m=>{m.transparent=true; m.opacity=.18;}); }
+  if(state.lights.hemi){ state.lights.hemi.color.setHex(env.hemiSky); state.lights.hemi.groundColor.setHex(env.hemiGround); state.lights.hemi.intensity=env.hemiI; }
+  if(state.lights.key){ state.lights.key.color.setHex(env.key); state.lights.key.intensity=env.keyI; state.lights.key.position.set(...env.keyPos); }
+  if(state.lights.fill){ state.lights.fill.color.setHex(env.fill); state.lights.fill.intensity=env.fillI; state.lights.fill.position.set(...env.fillPos); }
+  if(state.lights.rim){ state.lights.rim.color.setHex(env.rim); state.lights.rim.intensity=env.rimI; state.lights.rim.position.set(...env.rimPos); }
+}
+
+function createScene(){
+  const v=$('viewport');
+  state.renderer=new THREE.WebGLRenderer({antialias:true,alpha:true,preserveDrawingBuffer:true});
+  state.renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  state.renderer.setSize(v.clientWidth,v.clientHeight);
+  state.renderer.outputColorSpace=THREE.SRGBColorSpace;
+  v.appendChild(state.renderer.domElement);
+  state.scene=new THREE.Scene();
+  state.camera=new THREE.PerspectiveCamera(42,v.clientWidth/v.clientHeight,.1,100);
+  state.camera.position.set(0,2.4,7.4);
+  state.controls=new OrbitControls(state.camera,state.renderer.domElement);
+  state.controls.enableDamping=true; state.controls.dampingFactor=.08; state.controls.target.set(0,2,0); state.controls.minDistance=3.8; state.controls.maxDistance=13;
+  state.lights.hemi=new THREE.HemisphereLight(0xffffff,0x111122,1.2); state.scene.add(state.lights.hemi);
+  state.lights.key=new THREE.DirectionalLight(0xffffff,2.4); state.lights.key.position.set(4,8,6); state.scene.add(state.lights.key);
+  state.lights.rim=new THREE.PointLight(0xff4fd8,16,20,2); state.lights.rim.position.set(-4,4,-4); state.scene.add(state.lights.rim);
+  state.lights.fill=new THREE.PointLight(0x5ce8ff,10,18,2); state.lights.fill.position.set(4,2,5); state.scene.add(state.lights.fill);
+  state.floor=new THREE.Mesh(new THREE.CircleGeometry(5.5,64),new THREE.MeshStandardMaterial({color:0x11111a,roughness:.92,metalness:.05})); state.floor.rotation.x=-Math.PI/2; state.scene.add(state.floor);
+  state.grid=new THREE.GridHelper(11,14,0x5ce8ff,0x2e2e44); const mats=Array.isArray(state.grid.material)?state.grid.material:[state.grid.material]; mats.forEach(m=>{m.transparent=true; m.opacity=.18}); state.scene.add(state.grid);
+  state.root=new THREE.Group(); state.scene.add(state.root);
+  state.transform=new TransformControls(state.camera,state.renderer.domElement); state.transform.visible=false; state.transform.enabled=false; state.transform.setSize(.85);
+  state.transform.addEventListener('dragging-changed',e=>{ state.controls.enabled=!e.value; }); state.transform.addEventListener('objectChange',()=>render());
+  state.scene.add(state.transform);
+  state.renderer.domElement.addEventListener('pointerdown', onStagePointerDown);
+  applyEnvironment();
+  window.addEventListener('resize', resize);
+}
+function resize(){ const v=$('viewport'); if(!state.renderer||!state.camera) return; state.renderer.setSize(v.clientWidth,v.clientHeight); state.camera.aspect=v.clientWidth/v.clientHeight; state.camera.updateProjectionMatrix(); fitCameraToObject(); }
+function tubeGeometry(scale=1,wild=.8,thick=.7){ const pts=[]; let x=0,y=0,z=0; pts.push(new THREE.Vector3(x,y,z)); const count=Math.floor(rnd(4,7+wild*6)); for(let i=0;i<count;i++){ x+=rnd(-.45,.45)*scale*(.85+wild); y+=rnd(-.45,.45)*scale*(.85+wild); z+=rnd(-.34,.34)*scale*(.85+wild); pts.push(new THREE.Vector3(x,y,z)); } const curve=new THREE.CatmullRomCurve3(pts); const radius=scale*rnd(.045,.12)*(.55+thick*1.15); const geo=new THREE.TubeGeometry(curve,56,radius,14,false); geo.center(); return geo; }
+function ringGeometry(scale=1,wild=.8,thick=.7){ const major=scale*rnd(.30,.88); const minor=scale*rnd(.035,.11)*(.55+thick*1.25); const arc=rnd(Math.PI*(1.05+wild*.2),Math.PI*(1.45+wild*.6)); const geo=new THREE.TorusGeometry(major,minor,14,72,arc); geo.center(); return geo; }
+function capsuleGeometry(scale=1,wild=.8,thick=.7){ const radius=scale*rnd(.09,.20)*(.55+thick*1.15); const length=scale*rnd(.40,1.35)*(.85+wild*.7); const geo=new THREE.CapsuleGeometry(radius,length,8,14); geo.center(); return geo; }
+function blobGeometry(scale=1,wild=.8,thick=.7){ const geo=new THREE.SphereGeometry(scale*rnd(.26,.66),18,14); geo.scale(rnd(.75,1.45),rnd(.55,1.35),rnd(.55,1.35)); if(wild>.7){ geo.rotateX(rnd(-.6,.6)); geo.rotateY(rnd(-.6,.6)); } geo.center(); return geo; }
+function add(geo,pos,rot,scl=1){ const mesh=new THREE.Mesh(geo,makeMat()); mesh.position.set(pos[0],pos[1],pos[2]); mesh.rotation.set(rot[0],rot[1],rot[2]); mesh.scale.setScalar(scl); mesh.userData.spin=rnd(-.008,.008); state.root.add(mesh); return mesh; }
+
+function attachSelectedMesh(obj){ if(!obj){ if(state.transform){ state.transform.detach(); state.transform.visible=false; state.transform.enabled=false; } state.selectedMesh=null; return; } state.selectedMesh=obj; state.transform.attach(obj); state.transform.visible=true; state.transform.enabled=true; setStatus('Pieza seleccionada. Arrástrala en modo obra.'); }
+function onStagePointerDown(e){ if(!state.editMode||!state.renderer||!state.camera||!state.root) return; const rect=state.renderer.domElement.getBoundingClientRect(); state.pointer.x=((e.clientX-rect.left)/rect.width)*2-1; state.pointer.y=-((e.clientY-rect.top)/rect.height)*2+1; state.raycaster.setFromCamera(state.pointer,state.camera); const hits=state.raycaster.intersectObjects(state.root.children,true); const meshHit=hits.find(h=>h.object&&h.object.isMesh); if(meshHit) attachSelectedMesh(meshHit.object); }
+function setEditorTransformMode(mode){ if(!state.transform) return; state.transform.setMode(mode); setStatus(mode==='rotate'?'Modo rotación activo.':'Modo mover activo.'); }
+function formatCountdown(ms){ const total=Math.max(0,Math.ceil(ms/1000)); return `${String(Math.floor(total/60)).padStart(2,'0')}:${String(total%60).padStart(2,'0')}`; }
+function updateEditorTimer(){ const el=$('editorTimer'); if(!el) return; const left=state.editDeadline-Date.now(); el.textContent=formatCountdown(left); if(left<=0) exitEditorMode('Modo obra finalizado. Volviendo al layout normal.'); }
+function enterEditorMode(){ if(state.editMode) return; closeAlbum(); state.editMode=true; document.body.classList.add('editor-open'); state.editDeadline=Date.now()+5*60*1000; if(state.editTimer) clearInterval(state.editTimer); state.editTimer=setInterval(updateEditorTimer,1000); updateEditorTimer(); attachSelectedMesh(null); resize(); fitCameraToObject(); setStatus('Modo obra activo: toca una pieza para seleccionarla y edítala durante 5 min.'); }
+function exitEditorMode(message='Modo obra cerrado.'){ if(!state.editMode) return; state.editMode=false; document.body.classList.remove('editor-open'); if(state.editTimer){ clearInterval(state.editTimer); state.editTimer=null; } attachSelectedMesh(null); resize(); fitCameraToObject(); setStatus(message); }
+
+function openAlbum(){ document.body.classList.add('album-open'); renderGallery(); }
+function closeAlbum(){ document.body.classList.remove('album-open'); }
+function toggleShowcaseMode(){ state.showcaseMode=!state.showcaseMode; document.body.classList.toggle('showcase-mode',state.showcaseMode); $('showcaseBtn').textContent=`Modo Instagram: ${state.showcaseMode?'ON':'OFF'}`; resize(); fitCameraToObject(); setStatus(state.showcaseMode?'Modo Instagram activado.':'Modo Instagram desactivado.'); }
+
+function buildCharacter(){
+  clearRoot(); state.rng=mulberry32(state.seed||1);
+  const wild=Number($('abstractness').value)/100, chaos=Number($('poseChaos').value)/100, thick=Number($('chunkiness').value)/100;
+  rebuildProcedural(); applyEnvironment();
+  state.root.position.set(0,1.65,0); state.root.rotation.set(0,0,0);
+  add(blobGeometry(1.05,wild,thick),[0,0,0],[rnd(0,Math.PI),rnd(0,Math.PI),rnd(0,Math.PI)],1.05);
+  add(ringGeometry(1.18,wild,thick),[0,.12,0],[rnd(0,Math.PI),rnd(0,Math.PI),rnd(0,Math.PI)],1);
+  add(tubeGeometry(1.1,wild,thick),[0,.1,0],[rnd(0,Math.PI),rnd(0,Math.PI),rnd(0,Math.PI)],1);
+  const count=Math.floor(10+wild*16); const spreadX=.55+chaos*1.7, spreadY=.45+chaos*1.45, spreadZ=.45+chaos*1.4;
+  for(let i=0;i<count;i++){
+    const pick=nextRandom(); let geo;
+    if(pick<.42) geo=tubeGeometry(rnd(.45,1.05),wild,thick);
+    else if(pick<.67) geo=ringGeometry(rnd(.32,.86),wild,thick);
+    else if(pick<.88) geo=capsuleGeometry(rnd(.38,1.0),wild,thick);
+    else geo=blobGeometry(rnd(.30,.82),wild,thick);
+    add(geo,[rnd(-spreadX,spreadX),rnd(-spreadY,spreadY),rnd(-spreadZ,spreadZ)],[rnd(0,Math.PI),rnd(0,Math.PI),rnd(0,Math.PI)],rnd(.80,1.22));
+  }
+  fitCameraToObject(); state.rng=null;
+  setStatus(state.textures.length?'Texturas públicas aplicadas.':'Texturas internas aplicadas. Pulsa Enter para cargar públicas.');
+}
+function fitCameraToObject(){ if(!state.root||!state.camera||!state.controls) return; const box=new THREE.Box3().setFromObject(state.root); const size=box.getSize(new THREE.Vector3()).length(); const center=box.getCenter(new THREE.Vector3()); state.controls.target.copy(center); const dist=state.editMode?Math.max(4.2,size*.58):(state.showcaseMode?Math.max(4.8,size*.62):Math.max(5.4,size*.72)); state.camera.position.set(center.x, center.y+(state.editMode?.8:1.2), center.z+dist); state.camera.lookAt(center); state.controls.update(); }
+
+async function fetchWikimedia(q){ const url=`https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(q+' texture public domain canvas art clay')}&gsrnamespace=6&gsrlimit=34&prop=imageinfo&iiprop=url|extmetadata&iiurlwidth=1024&format=json&origin=*`; const data=await fetch(url).then(r=>r.json()); const pages=Object.values(data.query?.pages||{}); return pages.map(p=>{ const info=p.imageinfo?.[0]; const meta=info?.extmetadata||{}; const lic=`${meta.LicenseShortName?.value||''} ${meta.UsageTerms?.value||''}`; return{title:p.title,url:info?.thumburl||info?.url,license:lic}; }).filter(x=>x.url&&/Public domain|CC0|PDM|CC-0|Zero|Creative Commons|CC BY/i.test(x.license)).slice(0,12); }
+async function fetchAsDataUrl(url){ const res=await fetch(url); const blob=await res.blob(); return await new Promise((resolve,reject)=>{ const reader=new FileReader(); reader.onload=()=>resolve(reader.result); reader.onerror=reject; reader.readAsDataURL(blob); }); }
+async function loadPublicTextures(){ const q=$('query').value.trim()||'canvas clay abstract'; setStatus('Buscando texturas públicas...'); try{ const sources=shuffle(await fetchWikimedia(q)); const loaded=[]; for(const src of sources){ try{ const dataUrl=await fetchAsDataUrl(src.url); const tx=await textureLoader.loadAsync(dataUrl); loaded.push(prepTexture(tx)); }catch(e){} if(loaded.length>=6) break; } if(loaded.length){ state.textures=loaded; setStatus(`Cargadas ${loaded.length} texturas públicas.`); buildCharacter(); } else { setStatus('No entraron texturas públicas. Uso internas.'); } }catch(e){ setStatus('La búsqueda falló. Uso texturas internas.'); } }
+
+function computeCardMeta(preset){
+  const seed=(preset.seed>>>0) || 1; const r=mulberry32(seed); const rarity=weightedPick(r); const type=typeByAmbience[preset.ambience||'studio'] || 'Canvas';
+  const abs=Number(preset.abstractness||78), chaos=Number(preset.poseChaos||70), chunk=Number(preset.chunkiness||68);
+  const hp=clamp(Math.round(60 + abs*.8 + (rarity.name==='Legendaria'?20:0) + (rarity.shiny?25:0)), 50, 180);
+  const atk=clamp(Math.round(30 + chaos*.7 + (rarity.foil?10:0)), 20, 120);
+  const def=clamp(Math.round(28 + chunk*.75 + (rarity.name==='Épica'?10:0)), 20, 120);
+  const energy=clamp(Math.round(40 + (abs+chaos+chunk)/4), 35, 99);
+  const foil = rarity.foil || r() > .72;
+  const shiny = rarity.shiny || r() > .96;
+  return { rarity: shiny ? 'Shiny' : rarity.name, type, hp, atk, def, energy, foil, shiny, code:`OG-${String(seed%10000).padStart(4,'0')}` };
+}
+function currentPreset(){
+  return {
+    name:$('charName').value||'SIN NOMBRE', query:$('query').value||'', seed:state.seed,
+    abstractness:$('abstractness').value, poseChaos:$('poseChaos').value, chunkiness:$('chunkiness').value,
+    ambience:$('ambience').value, showcaseMode:state.showcaseMode, created:Date.now(),
+    thumbnail:state.renderer?.domElement?.toDataURL('image/png')||''
+  };
+}
+function loadGallery(){ try{ state.gallery=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]'); }catch(e){ state.gallery=[]; } }
+function saveGallery(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state.gallery.slice(0,96))); }
+function saveCharacter(){ const preset=currentPreset(); preset.cardMeta=computeCardMeta(preset); state.gallery.unshift(preset); state.gallery=state.gallery.slice(0,96); saveGallery(); renderGallery(); setStatus('Pieza guardada como carta coleccionable.'); }
+function loadPreset(p){ $('charName').value=p.name||'OGONAM'; $('query').value=p.query||''; state.seed=p.seed||1; $('abstractness').value=p.abstractness??78; $('poseChaos').value=p.poseChaos??70; $('chunkiness').value=p.chunkiness??68; $('ambience').value=p.ambience||'studio'; state.showcaseMode=!!p.showcaseMode; document.body.classList.toggle('showcase-mode',state.showcaseMode); $('showcaseBtn').textContent=`Modo Instagram: ${state.showcaseMode?'ON':'OFF'}`; buildCharacter(); closeAlbum(); setStatus('Pieza recuperada del álbum.'); }
+function removePreset(index){ state.gallery.splice(index,1); saveGallery(); renderGallery(); setStatus('Carta eliminada del álbum.'); }
+function cardTheme(amb){ const map={studio:['#ffe48b','#ca8e2d','#4b2d0d'],red:['#ffd0b2','#e85d3b','#671710'],blue:['#dcecff','#4d86ff','#16356d'],pink:['#ffd6ea','#ff69b6','#682547'],green:['#e8ffb0','#8acb3e','#27400b'],mono:['#f0f0f0','#9e9e9e','#222']}; return map[amb]||map.studio; }
+function filteredGallery(){ if(state.galleryFilter==='shiny') return state.gallery.filter(x=>(x.cardMeta||computeCardMeta(x)).shiny); if(state.galleryFilter==='foil') return state.gallery.filter(x=>(x.cardMeta||computeCardMeta(x)).foil); return state.gallery; }
+function renderGallery(){
+  const g=$('albumGallery'); if(!g) return; g.innerHTML='';
+  const items=filteredGallery(); const totalPages=Math.max(1, Math.ceil(items.length / PAGE_SIZE)); state.galleryPage=clamp(state.galleryPage,0,totalPages-1);
+  $('albumPageInfo').textContent=`Página ${state.galleryPage+1} / ${totalPages}`;
+  const pageItems=items.slice(state.galleryPage*PAGE_SIZE, state.galleryPage*PAGE_SIZE + PAGE_SIZE);
+  if(!pageItems.length){ const empty=document.createElement('div'); empty.className='pokeCard empty'; empty.textContent='Sin cartas en esta vista'; g.appendChild(empty); return; }
+  pageItems.forEach((p)=>{
+    const globalIndex=state.gallery.indexOf(p); const meta=p.cardMeta || computeCardMeta(p); p.cardMeta=meta;
+    const colors=cardTheme(p.ambience||'studio');
+    const card=document.createElement('div'); card.className=`pokeCard ${meta.foil?'foil':''} ${meta.shiny?'shiny':''}`;
+    card.innerHTML=`<div class="pokeTilt"><div class="pokeInner"><div class="pokeFace pokeFront" style="background:linear-gradient(180deg,${colors[0]},${colors[1]} 36%,${colors[2]} 100%)"><div class="frame"><div class="title">${(p.name||'OGONAM').replace(/[<>&]/g,'').slice(0,18)}</div><div class="hp">HP ${meta.hp}</div><div class="art">${p.thumbnail?`<img src="${p.thumbnail}" alt="${(p.name||'Ogonam').replace(/"/g,'')}"/>`:''}</div><div class="meta"><span class="pill">${meta.type}</span><span class="pill">${meta.rarity}</span><span class="pill">${meta.foil?'Foil':'Mate'}</span></div><div class="statsRow"><span>ATK ${meta.atk}</span><span>DEF ${meta.def}</span><span>ENG ${meta.energy}</span></div><div class="caption">Criatura Ogonam · ${new Date(p.created||Date.now()).toLocaleDateString()} · ${meta.code}</div></div><div class="cardActions"><button class="cardBtn invokeBtn">Invocar</button><button class="cardBtn alt flipBtn">Girar</button></div></div><div class="pokeFace pokeBack"><div class="logo">OGONAM</div><div class="ring"></div><div class="dot"></div><div class="stats">Nombre: ${(p.name||'OGONAM').replace(/[<>&]/g,'')}<br>Tipo: ${meta.type}<br>Rareza: ${meta.rarity}<br>HP: ${meta.hp} · ATK: ${meta.atk}<br>DEF: ${meta.def} · ENG: ${meta.energy}<br>Ambiente: ${p.ambience||'studio'}<br>Código: ${meta.code}</div><div class="cardActions"><button class="cardBtn invokeBtn">Invocar</button><button class="cardBtn danger deleteBtn">Borrar</button></div></div></div></div>`;
+    const tilt=card.querySelector('.pokeTilt');
+    card.addEventListener('pointermove',e=>{ const r=card.getBoundingClientRect(); const px=(e.clientX-r.left)/r.width; const py=(e.clientY-r.top)/r.height; const ry=(px-.5)*16; const rx=(.5-py)*14; tilt.style.transform=`rotateX(${rx}deg) rotateY(${ry}deg)`; });
+    card.addEventListener('pointerleave',()=>{ tilt.style.transform='rotateX(0deg) rotateY(0deg)'; });
+    card.addEventListener('click',e=>{ if(e.target.closest('button')) return; card.classList.toggle('flipped'); });
+    card.querySelectorAll('.flipBtn').forEach(btn=>btn.addEventListener('click',e=>{ e.stopPropagation(); card.classList.toggle('flipped'); }));
+    card.querySelectorAll('.invokeBtn').forEach(btn=>btn.addEventListener('click',e=>{ e.stopPropagation(); loadPreset(p); }));
+    const del=card.querySelector('.deleteBtn'); if(del) del.addEventListener('click',e=>{ e.stopPropagation(); removePreset(globalIndex); });
+    g.appendChild(card);
+  });
+}
+function setGalleryFilter(filter){ state.galleryFilter=filter; state.galleryPage=0; renderGallery(); setStatus(`Álbum filtrado: ${filter}.`); }
+function nextGalleryPage(delta){ state.galleryPage += delta; renderGallery(); }
+
+async function randomize(){
+  const names=['MANGO GHOST','TURBO MACHINE','CANVAS DOG','BARRIO LOOP','RED PLASTIC','BLUE MUTANT','SANTS BLOOM','SOFT SIGNAL'];
+  state.seed=(Math.random()*0xffffffff)>>>0; $('charName').value=rand(names); $('abstractness').value=Math.floor(55+Math.random()*45); $('poseChaos').value=Math.floor(35+Math.random()*60); $('chunkiness').value=Math.floor(30+Math.random()*65); const ambs=['studio','red','blue','pink','green','mono']; $('ambience').value=ambs[Math.floor(Math.random()*ambs.length)]; buildCharacter(); if(($('query').value||'').trim()){ try{ await loadPublicTextures(); }catch(e){} }
+}
+async function evolve(){ const seedStep=((Math.random()*9973)|0)+1; state.seed=((state.seed||1)+seedStep)>>>0; $('abstractness').value=clamp(Number($('abstractness').value)+(Math.random()>.5?1:-1)*Math.floor(Math.random()*12),0,100); $('poseChaos').value=clamp(Number($('poseChaos').value)+(Math.random()>.5?1:-1)*Math.floor(Math.random()*10),0,100); $('chunkiness').value=clamp(Number($('chunkiness').value)+(Math.random()>.5?1:-1)*Math.floor(Math.random()*10),0,100); buildCharacter(); setStatus('La pieza ha evolucionado manteniendo parte de su ADN.'); }
+function explode(){ const pieces=[]; state.root.traverse(obj=>{ if(obj.isMesh){ obj.userData.v=new THREE.Vector3(rnd(-.16,.16),rnd(.06,.24),rnd(-.16,.16)); obj.userData.r=new THREE.Vector3(rnd(-.12,.12),rnd(-.12,.12),rnd(-.12,.12)); pieces.push(obj); if(obj.material){ obj.material.transparent=true; obj.material.opacity=1; } } }); let tick=0; const timer=setInterval(()=>{ tick++; for(const obj of pieces){ obj.position.add(obj.userData.v); obj.userData.v.y-=.008; obj.rotation.x+=obj.userData.r.x; obj.rotation.y+=obj.userData.r.y; obj.rotation.z+=obj.userData.r.z; if(obj.material) obj.material.opacity=Math.max(0,obj.material.opacity-.015); } if(tick>80){ clearInterval(timer); clearRoot(); setStatus('El personaje ha explotado.'); } },16); }
+
+async function saveBlob(blob,filename){ if(window.OgonamAndroid&&window.OgonamAndroid.saveBase64){ const reader=new FileReader(); reader.onloadend=()=>{ const base64=String(reader.result).split(',')[1]; window.OgonamAndroid.saveBase64(filename, blob.type||'application/octet-stream', base64); }; reader.readAsDataURL(blob); } else { const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=filename; a.click(); URL.revokeObjectURL(url); } }
+async function savePng(){ render(); const data=state.renderer.domElement.toDataURL('image/png'); const base64=data.split(',')[1]; const filename=`ogonam-${Date.now()}.png`; if(window.OgonamAndroid&&window.OgonamAndroid.saveBase64){ window.OgonamAndroid.saveBase64(filename,'image/png',base64); } else { const a=document.createElement('a'); a.href=data; a.download=filename; a.click(); } setStatus('PNG guardado en Descargas/Ogonam.'); }
+async function recordVideo(){ if(state.recording) return; state.recording=true; setStatus('Grabando video 360...'); const stream=state.renderer.domElement.captureStream(30); const chunks=[]; const mime=MediaRecorder.isTypeSupported('video/webm;codecs=vp9')?'video/webm;codecs=vp9':'video/webm'; const recorder=new MediaRecorder(stream,{mimeType:mime}); recorder.ondataavailable=e=>{ if(e.data.size) chunks.push(e.data); }; recorder.start(); const start=state.root.rotation.y; for(let i=0;i<=120;i++){ state.root.rotation.y=start+Math.PI*2*(i/120); render(); await new Promise(r=>setTimeout(r,1000/30)); } recorder.stop(); await new Promise(r=>recorder.onstop=r); await saveBlob(new Blob(chunks,{type:'video/webm'}), `ogonam-360-${Date.now()}.webm`); state.recording=false; setStatus('Video guardado en Descargas/Ogonam.'); }
+async function recordGif(){ if(state.recording) return; if(typeof GIF==='undefined'){ setStatus('La librería GIF no cargó. Prueba video.'); return; } state.recording=true; setStatus('Grabando GIF 360...'); const gif=new GIF({workers:2,quality:12,workerScript:'https://cdn.jsdelivr.net/npm/gif.js.optimized/dist/gif.worker.js',width:state.renderer.domElement.width,height:state.renderer.domElement.height}); const start=state.root.rotation.y; for(let i=0;i<48;i++){ state.root.rotation.y=start+Math.PI*2*(i/48); render(); gif.addFrame(state.renderer.domElement,{copy:true,delay:60}); await new Promise(r=>setTimeout(r,20)); } gif.on('finished',async blob=>{ await saveBlob(blob,`ogonam-360-${Date.now()}.gif`); state.recording=false; setStatus('GIF guardado en Descargas/Ogonam.'); }); gif.render(); }
+
+function render(){ if(state.renderer&&state.scene&&state.camera) state.renderer.render(state.scene,state.camera); }
+function animate(){ requestAnimationFrame(animate); if(state.root&&!state.recording&&!state.editMode){ state.root.rotation.y += .004; state.root.children.forEach(obj=>{ obj.rotation.x += obj.userData.spin||0; obj.rotation.z += (obj.userData.spin||0)*.6; }); } if(state.controls) state.controls.update(); render(); }
+
+function bind(){
+  $('query').addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); loadPublicTextures(); } });
+  $('randomizeBtn').addEventListener('click',randomize); $('evolveBtn').addEventListener('click',evolve); $('saveCharBtn').addEventListener('click',saveCharacter); $('explodeBtn').addEventListener('click',explode);
+  $('recordVideoBtn').addEventListener('click',recordVideo); $('recordGifBtn').addEventListener('click',recordGif); $('savePngBtn').addEventListener('click',savePng); $('showcaseBtn').addEventListener('click',toggleShowcaseMode); $('artModeBtn').addEventListener('click',enterEditorMode);
+  $('openAlbumBtn').addEventListener('click',openAlbum); $('closeAlbumBtn').addEventListener('click',closeAlbum); $('albumPrevBtn').addEventListener('click',()=>nextGalleryPage(-1)); $('albumNextBtn').addEventListener('click',()=>nextGalleryPage(1)); $('albumFilterAll').addEventListener('click',()=>setGalleryFilter('all')); $('albumFilterShiny').addEventListener('click',()=>setGalleryFilter('shiny')); $('albumFilterFoil').addEventListener('click',()=>setGalleryFilter('foil'));
+  $('editorMoveBtn').addEventListener('click',()=>setEditorTransformMode('translate')); $('editorRotateBtn').addEventListener('click',()=>setEditorTransformMode('rotate')); $('editorExitBtn').addEventListener('click',()=>exitEditorMode('Modo obra cerrado manualmente.'));
+  ['abstractness','poseChaos','chunkiness','ambience'].forEach(id=>{ $(id).addEventListener('input',buildCharacter); $(id).addEventListener('change',buildCharacter); });
+}
+
+function init(){ createScene(); bind(); loadGallery(); renderGallery(); $('showcaseBtn').textContent='Modo Instagram: OFF'; buildCharacter(); animate(); setTimeout(loadPublicTextures,900); }
+init();
 </script>
 </body>
 </html>
