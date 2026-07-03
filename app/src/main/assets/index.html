@@ -126,7 +126,12 @@ body.showcase-mode #viewport{filter:saturate(1.08) contrast(1.04)}
         <button id="showcaseBtn" class="pink">Modo Instagram: OFF</button>
         <button id="artModeBtn" class="blue">Modo obra · 5 MIN</button>
       </div>
-      <p class="small">Vídeo, GIF, PNG, modo Instagram y modo obra con edición temporal a pantalla completa.</p>
+      <label>Calidad vídeo</label>
+      <select id="videoQuality">
+        <option value="1080">1080p · 60 FPS</option>
+        <option value="1440">2K · 60 FPS</option>
+      </select>
+      <p class="small">Intentará MP4 si Android WebView lo soporta. Si no, usará WebM. Durante el vídeo la figura gira 360 y las piezas se mueven.</p>
     </section>
     <section class="panel">
       <h2>Forma</h2>
@@ -421,7 +426,114 @@ function explode(){ const pieces=[]; state.root.traverse(obj=>{ if(obj.isMesh){ 
 
 async function saveBlob(blob,filename){ if(window.OgonamAndroid&&window.OgonamAndroid.saveBase64){ const reader=new FileReader(); reader.onloadend=()=>{ const base64=String(reader.result).split(',')[1]; window.OgonamAndroid.saveBase64(filename, blob.type||'application/octet-stream', base64); }; reader.readAsDataURL(blob); } else { const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=filename; a.click(); URL.revokeObjectURL(url); } }
 async function savePng(){ render(); const data=state.renderer.domElement.toDataURL('image/png'); const base64=data.split(',')[1]; const filename=`ogonam-${Date.now()}.png`; if(window.OgonamAndroid&&window.OgonamAndroid.saveBase64){ window.OgonamAndroid.saveBase64(filename,'image/png',base64); } else { const a=document.createElement('a'); a.href=data; a.download=filename; a.click(); } setStatus('PNG guardado en Descargas/Ogonam.'); }
-async function recordVideo(){ if(state.recording) return; state.recording=true; setStatus('Grabando video 360...'); const stream=state.renderer.domElement.captureStream(30); const chunks=[]; const mime=MediaRecorder.isTypeSupported('video/webm;codecs=vp9')?'video/webm;codecs=vp9':'video/webm'; const recorder=new MediaRecorder(stream,{mimeType:mime}); recorder.ondataavailable=e=>{ if(e.data.size) chunks.push(e.data); }; recorder.start(); const start=state.root.rotation.y; for(let i=0;i<=120;i++){ state.root.rotation.y=start+Math.PI*2*(i/120); render(); await new Promise(r=>setTimeout(r,1000/30)); } recorder.stop(); await new Promise(r=>recorder.onstop=r); await saveBlob(new Blob(chunks,{type:'video/webm'}), `ogonam-360-${Date.now()}.webm`); state.recording=false; setStatus('Video guardado en Descargas/Ogonam.'); }
+async function recordVideo(){
+  if(state.recording) return;
+  state.recording = true;
+
+  const quality = $('videoQuality')?.value || '1080';
+  const target = quality === '1440'
+    ? {w:2560, h:1440, label:'2K'}
+    : {w:1920, h:1080, label:'1080p'};
+
+  const canvas = state.renderer.domElement;
+  const oldSize = new THREE.Vector2();
+  state.renderer.getSize(oldSize);
+  const oldPixelRatio = state.renderer.getPixelRatio();
+  const oldAspect = state.camera.aspect;
+  const oldRootRot = state.root.rotation.clone();
+  const oldPositions = [];
+
+  state.root.traverse(obj=>{
+    if(obj.isMesh){
+      oldPositions.push({
+        obj,
+        pos: obj.position.clone(),
+        rot: obj.rotation.clone(),
+        seed: Math.random() * Math.PI * 2,
+        amp: 0.035 + Math.random() * 0.12
+      });
+    }
+  });
+
+  const candidates = [
+    {mime:'video/mp4;codecs="avc1.42E01E"', ext:'mp4'},
+    {mime:'video/mp4;codecs=h264', ext:'mp4'},
+    {mime:'video/mp4', ext:'mp4'},
+    {mime:'video/webm;codecs=vp9', ext:'webm'},
+    {mime:'video/webm;codecs=vp8', ext:'webm'},
+    {mime:'video/webm', ext:'webm'}
+  ];
+  const selected = candidates.find(x=>MediaRecorder.isTypeSupported(x.mime)) || candidates[candidates.length-1];
+
+  setStatus(`Grabando ${target.label} 60 FPS ${selected.ext.toUpperCase()}...`);
+
+  try{
+    state.renderer.setPixelRatio(1);
+    state.renderer.setSize(target.w, target.h, false);
+    state.camera.aspect = target.w / target.h;
+    state.camera.updateProjectionMatrix();
+    fitCameraToObject();
+
+    const stream = canvas.captureStream(60);
+    const chunks = [];
+    const recorder = new MediaRecorder(stream, {
+      mimeType: selected.mime,
+      videoBitsPerSecond: quality === '1440' ? 18000000 : 12000000
+    });
+
+    recorder.ondataavailable = e => { if(e.data && e.data.size) chunks.push(e.data); };
+    recorder.start(100);
+
+    const totalFrames = 360;
+    const startY = state.root.rotation.y;
+
+    for(let i=0;i<=totalFrames;i++){
+      const t = i / totalFrames;
+      const angle = Math.PI * 2 * t;
+      state.root.rotation.y = startY + angle;
+
+      oldPositions.forEach((item, idx)=>{
+        const wobble = Math.sin(angle * (1.2 + (idx % 5) * .13) + item.seed) * item.amp;
+        const bob = Math.cos(angle * (1.5 + (idx % 7) * .11) + item.seed) * item.amp * .7;
+        item.obj.position.x = item.pos.x + wobble;
+        item.obj.position.y = item.pos.y + bob;
+        item.obj.position.z = item.pos.z + Math.sin(angle + item.seed) * item.amp * .55;
+        item.obj.rotation.x = item.rot.x + Math.sin(angle * 1.4 + item.seed) * .22;
+        item.obj.rotation.y = item.rot.y + Math.cos(angle * 1.1 + item.seed) * .18;
+        item.obj.rotation.z = item.rot.z + Math.sin(angle * 1.7 + item.seed) * .16;
+      });
+
+      render();
+      await new Promise(r=>setTimeout(r, 1000/60));
+    }
+
+    recorder.stop();
+    await new Promise(resolve => recorder.onstop = resolve);
+
+    const blob = new Blob(chunks, {type:selected.mime});
+    await saveBlob(blob, `ogonam-${target.label}-60fps-${Date.now()}.${selected.ext}`);
+
+    setStatus(
+      selected.ext === 'mp4'
+        ? `${target.label} 60 FPS MP4 guardado en Descargas/Ogonam.`
+        : `${target.label} 60 FPS guardado como WebM. MP4 no está soportado por este WebView.`
+    );
+  }catch(err){
+    setStatus('Falló la grabación de vídeo. Prueba 1080p si estabas en 2K.');
+  }finally{
+    oldPositions.forEach(item=>{
+      item.obj.position.copy(item.pos);
+      item.obj.rotation.copy(item.rot);
+    });
+    state.root.rotation.copy(oldRootRot);
+    state.renderer.setPixelRatio(oldPixelRatio);
+    state.renderer.setSize(oldSize.x, oldSize.y, false);
+    state.camera.aspect = oldAspect;
+    state.camera.updateProjectionMatrix();
+    resize();
+    state.recording = false;
+  }
+}
 async function recordGif(){ if(state.recording) return; if(typeof GIF==='undefined'){ setStatus('La librería GIF no cargó. Prueba video.'); return; } state.recording=true; setStatus('Grabando GIF 360...'); const gif=new GIF({workers:2,quality:12,workerScript:'https://cdn.jsdelivr.net/npm/gif.js.optimized/dist/gif.worker.js',width:state.renderer.domElement.width,height:state.renderer.domElement.height}); const start=state.root.rotation.y; for(let i=0;i<48;i++){ state.root.rotation.y=start+Math.PI*2*(i/48); render(); gif.addFrame(state.renderer.domElement,{copy:true,delay:60}); await new Promise(r=>setTimeout(r,20)); } gif.on('finished',async blob=>{ await saveBlob(blob,`ogonam-360-${Date.now()}.gif`); state.recording=false; setStatus('GIF guardado en Descargas/Ogonam.'); }); gif.render(); }
 
 function render(){ if(state.renderer&&state.scene&&state.camera) state.renderer.render(state.scene,state.camera); }
